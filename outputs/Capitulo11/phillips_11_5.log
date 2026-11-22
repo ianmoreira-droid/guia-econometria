@@ -1,0 +1,157 @@
+--------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\P
+> IBIC\Stata\ExemplosWooldridge\Cap11\phillips_11_5.log
+  log type:  text
+ opened on:  14 Jul 2026, 12:02:31
+
+. 
+. *Importando dados
+. import excel "phillips.xls", firstrow clear
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.      
+>  Min        Max
+-------------+------------------------------------------
+> ---------------
+        year |         49        1972    14.28869       
+> 1948       1996
+        unem |         49    5.740816    1.562839       
+>  2.9        9.7
+         inf |         49    4.108163    3.182821       
+> -1.2       13.5
+      unem_1 |          0
+       inf_1 |          0
+-------------+------------------------------------------
+> ---------------
+      unem_2 |          0
+       inf_2 |          0
+       cunem |          0
+        cinf |          0
+     cunem_1 |          0
+-------------+------------------------------------------
+> ---------------
+      cinf_1 |          0
+
+. destring unem_1 inf_1 unem_2 inf_2 cunem cinf cunem_1 
+> cinf_1, replace
+unem_1: all characters numeric; replaced as double
+(1 missing value generated)
+inf_1: all characters numeric; replaced as double
+(1 missing value generated)
+unem_2: all characters numeric; replaced as double
+(2 missing values generated)
+inf_2: all characters numeric; replaced as double
+(2 missing values generated)
+cunem: all characters numeric; replaced as double
+(1 missing value generated)
+cinf: all characters numeric; replaced as double
+(1 missing value generated)
+cunem_1: all characters numeric; replaced as double
+(2 missing values generated)
+cinf_1: all characters numeric; replaced as double
+(2 missing values generated)
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.      
+>  Min        Max
+-------------+------------------------------------------
+> ---------------
+        year |         49        1972    14.28869       
+> 1948       1996
+        unem |         49    5.740816    1.562839       
+>  2.9        9.7
+         inf |         49    4.108163    3.182821       
+> -1.2       13.5
+      unem_1 |         48    5.747917    1.578579       
+>  2.9        9.7
+       inf_1 |         48     4.13125    3.212354       
+> -1.2       13.5
+-------------+------------------------------------------
+> ---------------
+      unem_2 |         47    5.751064    1.595493       
+>  2.9        9.7
+       inf_2 |         47    4.159574    3.241018       
+> -1.2       13.5
+       cunem |         48    .0333333    1.120094       
+> -2.1        2.9
+        cinf |         48     -.10625    2.566926       
+> -9.3        6.6
+     cunem_1 |         47    .0382979    1.131669       
+> -2.1        2.9
+-------------+------------------------------------------
+> ---------------
+      cinf_1 |         47    -.112766    2.594276       
+> -9.3        6.6
+
+. 
+. ** Regressão - eststo salva resultados - No conjunto r
+> estrito de variáveis
+. eststo ex11_5: reg cinf unem
+
+      Source |       SS           df       MS      Numbe
+> r of obs   =        48
+-------------+----------------------------------   F(1, 
+> 46)        =      5.56
+       Model |   33.382999         1   33.382999   Prob 
+> > F        =    0.0227
+    Residual |  276.305126        46  6.00663318   R-squ
+> ared       =    0.1078
+-------------+----------------------------------   Adj R
+> -squared   =    0.0884
+       Total |  309.688125        47  6.58910905   Root 
+> MSE        =    2.4508
+
+--------------------------------------------------------
+> ----------------------
+        cinf |      Coef.   Std. Err.      t    P>|t|   
+>   [95% Con                                            
+>           f. Interval]
+-------------+------------------------------------------
+> ----------------------
+        unem |  -.5425869   .2301559    -2.36   0.023   
+>  -1.005867                                            
+>               -.079307
+       _cons |   3.030581    1.37681     2.20   0.033   
+>   .2592061                                            
+>               5.801955
+--------------------------------------------------------
+> ----------------------
+
+. display e(r2)
+.10779554
+
+. 
+. esttab ex11_5 using "phillips11_5.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file phillips11_5.rtf not found)
+(output written to phillips11_5.rtf)
+
+. 
+.         
+. /*
+> 
+> Por macroeconomia, a relação entre inflação e desempre
+> go é negativa
+> no curto prazo, como os dados estão em anos isso influ
+> encia 
+> no resultado mostrando um impacto positivo do desempre
+> go na inflação
+> ao longo do tempo
+> 
+> */
+. 
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\P
+> IBIC\Stata\ExemplosWooldridge\Cap11\phillips_11_5.log
+  log type:  text
+ closed on:  14 Jul 2026, 12:02:31
+--------------------------------------------------------

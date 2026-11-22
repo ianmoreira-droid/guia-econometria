@@ -1,0 +1,315 @@
+-----------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Exem
+> plosWooldridge\Cap12\nyse_12_8.log
+  log type:  text
+ opened on:  23 Jul 2026, 17:05:23
+
+. 
+. *Importando dados
+. import excel "nyse.xls", firstrow clear
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       price |        691    91.58883    37.99382      48.49     186.94
+      return |          0
+    return_1 |          0
+           t |        691         346    199.6188          1        691
+     price_1 |          0
+-------------+---------------------------------------------------------
+     price_2 |          0
+      cprice |          0
+    cprice_1 |          0
+
+. destring return_1 return price_1 price_2 cprice cprice_1, replace
+return_1: all characters numeric; replaced as double
+(2 missing values generated)
+return: all characters numeric; replaced as double
+(1 missing value generated)
+price_1: all characters numeric; replaced as double
+(1 missing value generated)
+price_2: all characters numeric; replaced as double
+(2 missing values generated)
+cprice: all characters numeric; replaced as double
+(1 missing value generated)
+cprice_1: all characters numeric; replaced as double
+(2 missing values generated)
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       price |        691    91.58883    37.99382      48.49     186.94
+      return |        690    .1957843    2.114532  -15.32173   8.448762
+    return_1 |        689    .1953224    2.116033  -15.32173   8.448762
+           t |        691         346    199.6188          1        691
+     price_1 |        690    91.48352    37.92033      48.49     186.94
+-------------+---------------------------------------------------------
+     price_2 |        689    91.37913    37.84853      48.49     186.94
+      cprice |        690     .165942    2.311498  -26.23999   8.800003
+    cprice_1 |        689    .1649637    2.313035  -26.23999   8.800003
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD5170_000000.tmp"
+
+. ** Regressão - eststo salva resultados - No conjunto restrito de vari
+> áveis
+. eststo ex12_8: reg return return_1
+
+      Source |       SS           df       MS      Number of obs   =   
+>     689
+-------------+----------------------------------   F(1, 687)       =   
+>    2.40
+       Model |  10.6866243         1  10.6866243   Prob > F        =   
+>  0.1218
+    Residual |  3059.73814       687  4.45376731   R-squared       =   
+>  0.0035
+-------------+----------------------------------   Adj R-squared   =   
+>  0.0020
+       Total |  3070.42477       688   4.4628267   Root MSE        =   
+>  2.1104
+
+-----------------------------------------------------------------------
+> -------
+      return |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+    return_1 |   .0588984   .0380231     1.55   0.122    -.0157569    .
+> 1335538
+       _cons |    .179634   .0807419     2.22   0.026     .0211034    .
+> 3381646
+-----------------------------------------------------------------------
+> -------
+
+. display e(r2)
+.0034805
+
+. 
+. esttab ex12_8 using "nyse12_8.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(output written to nyse12_8.rtf)
+
+. 
+. di _b[return_1]/_se[return_1]
+1.5490182
+
+. predict uhat, resid
+(2 missing values generated)
+
+. gen uhat2 = uhat^2
+(2 missing values generated)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD5170_000000.tmp"
+
+. eststo ex12_81: reg uhat2 return_1
+
+      Source |       SS           df       MS      Number of obs   =   
+>     689
+-------------+----------------------------------   F(1, 687)       =   
+>   30.05
+       Model |  3755.56792         1  3755.56792   Prob > F        =   
+>  0.0000
+    Residual |  85846.3152       687  124.958246   R-squared       =   
+>  0.0419
+-------------+----------------------------------   Adj R-squared   =   
+>  0.0405
+       Total |  89601.8831       688  130.235295   Root MSE        =   
+>  11.178
+
+-----------------------------------------------------------------------
+> -------
+       uhat2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+    return_1 |  -1.104132   .2014029    -5.48   0.000    -1.499572   -.
+> 7086932
+       _cons |   4.656501   .4276789    10.89   0.000     3.816786    5
+> .496216
+-----------------------------------------------------------------------
+> -------
+
+. display e(r2)
+.04191394
+
+. 
+. esttab ex12_81 using "nyse12_81.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+file nyse12_81.rtf is read-only; cannot be modified or erased
+r(608);
+
+end of do-file
+
+r(608);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD5170_000000.tmp"
+
+. eststo ex12_81: reg uhat2 return_1
+
+      Source |       SS           df       MS      Number of obs   =   
+>     689
+-------------+----------------------------------   F(1, 687)       =   
+>   30.05
+       Model |  3755.56792         1  3755.56792   Prob > F        =   
+>  0.0000
+    Residual |  85846.3152       687  124.958246   R-squared       =   
+>  0.0419
+-------------+----------------------------------   Adj R-squared   =   
+>  0.0405
+       Total |  89601.8831       688  130.235295   Root MSE        =   
+>  11.178
+
+-----------------------------------------------------------------------
+> -------
+       uhat2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+    return_1 |  -1.104132   .2014029    -5.48   0.000    -1.499572   -.
+> 7086932
+       _cons |   4.656501   .4276789    10.89   0.000     3.816786    5
+> .496216
+-----------------------------------------------------------------------
+> -------
+
+. display e(r2)
+.04191394
+
+. 
+. esttab ex12_81 using "nyse12_81.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file nyse12_81.rtf not found)
+(output written to nyse12_81.rtf)
+
+. 
+. di _b[return_1]/_se[return_1]
+-5.482206
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD5170_000000.tmp"
+
+. gen luhat2 = L.uhat2
+time variable not set
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD5170_000000.tmp"
+
+. tsset t
+        time variable:  t, 1 to 691
+                delta:  1 unit
+
+. gen luhat2 = L.uhat2
+(3 missing values generated)
+
+. eststo ex12_9: reg uhat2 luhat2
+
+      Source |       SS           df       MS      Number of obs   =   
+>     688
+-------------+----------------------------------   F(1, 686)       =   
+>   87.92
+       Model |  10177.7086         1  10177.7086   Prob > F        =   
+>  0.0000
+    Residual |  79409.7821       686    115.7577   R-squared       =   
+>  0.1136
+-------------+----------------------------------   Adj R-squared   =   
+>  0.1123
+       Total |  89587.4907       687  130.403917   Root MSE        =   
+>  10.759
+
+-----------------------------------------------------------------------
+> -------
+       uhat2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+      luhat2 |   .3370622   .0359468     9.38   0.000     .2664833    .
+> 4076411
+       _cons |   2.947434   .4402343     6.70   0.000     2.083065    3
+> .811802
+-----------------------------------------------------------------------
+> -------
+
+. 
+. esttab ex12_9 using "nyse12_9.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file nyse12_9.rtf not found)
+(output written to nyse12_9.rtf)
+
+. 
+. di _b[luhat2]/_se[luhat2]
+9.3767009
+
+. /*
+
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD5170_000000.tmp"
+
+. gen luhat = L.uhat
+(3 missing values generated)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD5170_000000.tmp"
+
+. reg uhat luhat
+
+      Source |       SS           df       MS      Number of obs   =   
+>     688
+-------------+----------------------------------   F(1, 686)       =   
+>    0.00
+       Model |  .006037904         1  .006037904   Prob > F        =   
+>  0.9707
+    Residual |   3059.0813       686  4.45930218   R-squared       =   
+>  0.0000
+-------------+----------------------------------   Adj R-squared   =   
+> -0.0015
+       Total |  3059.08733       687  4.45281999   Root MSE        =   
+>  2.1117
+
+-----------------------------------------------------------------------
+> -------
+        uhat |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+       luhat |   .0014048   .0381773     0.04   0.971    -.0735537    .
+> 0763633
+       _cons |  -.0011708    .080508    -0.01   0.988    -.1592425     
+> .156901
+-----------------------------------------------------------------------
+> -------
+
+. di _b[luhat]/_se[luhat]
+.03679676
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\ExemplosW
+> ooldridge\Cap12\nyse_8_9.dta"
+file C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\ExemplosWool
+> dridge\Cap12\nyse_8_9.dta saved
+
+. exit, clear

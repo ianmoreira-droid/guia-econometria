@@ -1,0 +1,252 @@
+-----------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stat
+> a\ExemplosWooldridge\Cap12\phillips_12_5.log
+  log type:  text
+ opened on:  20 Jul 2026, 15:26:25
+
+. 
+. *Importando dados
+. import excel "phillips.xls", firstrow clear
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min     
+>    Max
+-------------+---------------------------------------------------
+> ------
+        year |         49        1972    14.28869       1948     
+>   1996
+        unem |         49    5.740816    1.562839        2.9     
+>    9.7
+         inf |         49    4.108163    3.182821       -1.2     
+>   13.5
+      unem_1 |          0
+       inf_1 |          0
+-------------+---------------------------------------------------
+> ------
+      unem_2 |          0
+       inf_2 |          0
+       cunem |          0
+        cinf |          0
+     cunem_1 |          0
+-------------+---------------------------------------------------
+> ------
+      cinf_1 |          0
+
+. destring unem_1 inf_1 unem_2 inf_2 cunem cinf cunem_1 cinf_1, r
+> eplace
+unem_1: all characters numeric; replaced as double
+(1 missing value generated)
+inf_1: all characters numeric; replaced as double
+(1 missing value generated)
+unem_2: all characters numeric; replaced as double
+(2 missing values generated)
+inf_2: all characters numeric; replaced as double
+(2 missing values generated)
+cunem: all characters numeric; replaced as double
+(1 missing value generated)
+cinf: all characters numeric; replaced as double
+(1 missing value generated)
+cunem_1: all characters numeric; replaced as double
+(2 missing values generated)
+cinf_1: all characters numeric; replaced as double
+(2 missing values generated)
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min     
+>    Max
+-------------+---------------------------------------------------
+> ------
+        year |         49        1972    14.28869       1948     
+>   1996
+        unem |         49    5.740816    1.562839        2.9     
+>    9.7
+         inf |         49    4.108163    3.182821       -1.2     
+>   13.5
+      unem_1 |         48    5.747917    1.578579        2.9     
+>    9.7
+       inf_1 |         48     4.13125    3.212354       -1.2     
+>   13.5
+-------------+---------------------------------------------------
+> ------
+      unem_2 |         47    5.751064    1.595493        2.9     
+>    9.7
+       inf_2 |         47    4.159574    3.241018       -1.2     
+>   13.5
+       cunem |         48    .0333333    1.120094       -2.1     
+>    2.9
+        cinf |         48     -.10625    2.566926       -9.3     
+>    6.6
+     cunem_1 |         47    .0382979    1.131669       -2.1     
+>    2.9
+-------------+---------------------------------------------------
+> ------
+      cinf_1 |         47    -.112766    2.594276       -9.3     
+>    6.6
+
+. 
+. ** Regressão 10.5
+. eststo ex12_5: reg inf unem
+
+      Source |       SS           df       MS      Number of obs 
+>   =        49
+-------------+----------------------------------   F(1, 47)      
+>   =      2.62
+       Model |  25.6369586         1  25.6369586   Prob > F      
+>   =    0.1125
+    Residual |  460.619776        47  9.80042077   R-squared     
+>   =    0.0527
+-------------+----------------------------------   Adj R-squared 
+>   =    0.0326
+       Total |  486.256735        48  10.1303486   Root MSE      
+>   =    3.1306
+
+-----------------------------------------------------------------
+> -------------
+         inf |      Coef.   Std. Err.      t    P>|t|     [95% Co
+> n                                                              
+>  f. Interval]
+-------------+---------------------------------------------------
+> -------------
+        unem |   .4676257   .2891262     1.62   0.112    -.114021
+> 2                                                              
+>      1.049273
+       _cons |    1.42361   1.719015     0.83   0.412    -2.03460
+> 2                                                              
+>      4.881822
+-----------------------------------------------------------------
+> -------------
+
+. display e(r2)
+.05272309
+
+. 
+. esttab ex12_5 using "phillips12_51.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file phillips12_51.rtf not found)
+(output written to phillips12_51.rtf)
+
+. 
+. predict uhat, resid
+
+. tsset year
+        time variable:  year, 1948 to 1996
+                delta:  1 unit
+
+. gen Luhat = L.uhat
+(1 missing value generated)
+
+. reg uhat Luhat
+
+      Source |       SS           df       MS      Number of obs 
+>   =        48
+-------------+----------------------------------   F(1, 46)      
+>   =     24.34
+       Model |   150.91704         1   150.91704   Prob > F      
+>   =    0.0000
+    Residual |  285.198404        46  6.19996531   R-squared     
+>   =    0.3460
+-------------+----------------------------------   Adj R-squared 
+>   =    0.3318
+       Total |  436.115445        47  9.27905202   Root MSE      
+>   =      2.49
+
+-----------------------------------------------------------------
+> -------------
+        uhat |      Coef.   Std. Err.      t    P>|t|     [95% Co
+> n                                                              
+>  f. Interval]
+-------------+---------------------------------------------------
+> -------------
+       Luhat |   .5729695   .1161334     4.93   0.000     .339205
+> 2                                                              
+>      .8067338
+       _cons |  -.1133967    .359404    -0.32   0.754    -.836839
+> 3                                                              
+>       .610046
+-----------------------------------------------------------------
+> -------------
+
+. 
+. prais inf unem
+
+Iteration 0:  rho = 0.0000
+Iteration 1:  rho = 0.5727
+Iteration 2:  rho = 0.7307
+Iteration 3:  rho = 0.7719
+Iteration 4:  rho = 0.7792
+Iteration 5:  rho = 0.7803
+Iteration 6:  rho = 0.7805
+Iteration 7:  rho = 0.7805
+Iteration 8:  rho = 0.7805
+Iteration 9:  rho = 0.7805
+
+Prais-Winsten AR(1) regression -- iterated estimates
+
+      Source |       SS           df       MS      Number of obs 
+>   =        49
+-------------+----------------------------------   F(1, 47)      
+>   =      7.39
+       Model |  37.9720544         1  37.9720544   Prob > F      
+>   =    0.0092
+    Residual |  241.618452        47  5.14081813   R-squared     
+>   =    0.1358
+-------------+----------------------------------   Adj R-squared 
+>   =    0.1174
+       Total |  279.590507        48  5.82480222   Root MSE      
+>   =    2.2673
+
+-----------------------------------------------------------------
+> -------------
+         inf |      Coef.   Std. Err.      t    P>|t|     [95% Co
+> n                                                              
+>  f. Interval]
+-------------+---------------------------------------------------
+> -------------
+        unem |  -.7156589   .3134522    -2.28   0.027    -1.34624
+> 3                                                              
+>     -.0850743
+       _cons |   8.295911    2.23143     3.72   0.001     3.80685
+> 4                                                              
+>      12.78497
+-------------+---------------------------------------------------
+> -------------
+         rho |   .7805446
+-----------------------------------------------------------------
+> -------------
+Durbin-Watson statistic (original)    0.802700
+Durbin-Watson statistic (transformed) 1.909865
+
+. /*
+>                 (1)
+>                 inf
+> unem    0.468
+>            (0.289)
+>         
+> _cons   1.424
+>            (1.719)
+> Obs.    49
+> R2              0.0527
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> pchapeu = .5729695
+> t = 4.93
+> p-valor = 0 
+> Evidencia forte de autocorrelação serial positiva 
+> de primeira ordem 
+> */
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stat
+> a\ExemplosWooldridge\Cap12\phillips_12_5.log
+  log type:  text
+ closed on:  20 Jul 2026, 15:26:25
+-----------------------------------------------------------------

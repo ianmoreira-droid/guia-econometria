@@ -1,0 +1,132 @@
+--------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\P
+> IBIC\Stata\ExemplosWooldridge\Cap11\nyse_11_4.log
+  log type:  text
+ opened on:  14 Jul 2026, 12:24:35
+
+. 
+. *Importando dados
+. import excel "nyse.xls", firstrow clear
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.      
+>  Min        Max
+-------------+------------------------------------------
+> ---------------
+       price |        691    91.58883    37.99382      4
+> 8.49     186.94
+      return |          0
+    return_1 |          0
+           t |        691         346    199.6188       
+>    1        691
+     price_1 |          0
+-------------+------------------------------------------
+> ---------------
+     price_2 |          0
+      cprice |          0
+    cprice_1 |          0
+
+. destring return_1 return price_1 price_2 cprice cprice
+> _1, replace
+return_1: all characters numeric; replaced as double
+(2 missing values generated)
+return: all characters numeric; replaced as double
+(1 missing value generated)
+price_1: all characters numeric; replaced as double
+(1 missing value generated)
+price_2: all characters numeric; replaced as double
+(2 missing values generated)
+cprice: all characters numeric; replaced as double
+(1 missing value generated)
+cprice_1: all characters numeric; replaced as double
+(2 missing values generated)
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.      
+>  Min        Max
+-------------+------------------------------------------
+> ---------------
+       price |        691    91.58883    37.99382      4
+> 8.49     186.94
+      return |        690    .1957843    2.114532  -15.3
+> 2173   8.448762
+    return_1 |        689    .1953224    2.116033  -15.3
+> 2173   8.448762
+           t |        691         346    199.6188       
+>    1        691
+     price_1 |        690    91.48352    37.92033      4
+> 8.49     186.94
+-------------+------------------------------------------
+> ---------------
+     price_2 |        689    91.37913    37.84853      4
+> 8.49     186.94
+      cprice |        690     .165942    2.311498  -26.2
+> 3999   8.800003
+    cprice_1 |        689    .1649637    2.313035  -26.2
+> 3999   8.800003
+
+. 
+. ** Regressão - eststo salva resultados - No conjunto r
+> estrito de variáveis
+. eststo ex11_4: reg return return_1
+
+      Source |       SS           df       MS      Numbe
+> r of obs   =       689
+-------------+----------------------------------   F(1, 
+> 687)       =      2.40
+       Model |  10.6866243         1  10.6866243   Prob 
+> > F        =    0.1218
+    Residual |  3059.73814       687  4.45376731   R-squ
+> ared       =    0.0035
+-------------+----------------------------------   Adj R
+> -squared   =    0.0020
+       Total |  3070.42477       688   4.4628267   Root 
+> MSE        =    2.1104
+
+--------------------------------------------------------
+> ----------------------
+      return |      Coef.   Std. Err.      t    P>|t|   
+>   [95% Con                                            
+>           f. Interval]
+-------------+------------------------------------------
+> ----------------------
+    return_1 |   .0588984   .0380231     1.55   0.122   
+>  -.0157569                                            
+>               .1335538
+       _cons |    .179634   .0807419     2.22   0.026   
+>   .0211034                                            
+>               .3381646
+--------------------------------------------------------
+> ----------------------
+
+. display e(r2)
+.0034805
+
+. 
+. esttab ex11_4 using "nyse11_4.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file nyse11_4.rtf not found)
+(output written to nyse11_4.rtf)
+
+. 
+. 
+. 
+. /*
+> 
+> */
+. 
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\P
+> IBIC\Stata\ExemplosWooldridge\Cap11\nyse_11_4.log
+  log type:  text
+ closed on:  14 Jul 2026, 12:24:35
+--------------------------------------------------------

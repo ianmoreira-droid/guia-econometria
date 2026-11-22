@@ -1,0 +1,584 @@
+-----------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Exem
+> plosWooldridge\Cap12\prminwge_12_7.log
+  log type:  text
+ opened on:  23 Jul 2026, 15:14:12
+
+. 
+. *Importando dados
+. import excel "prminwge.xls", firstrow clear
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        year |         38      1968.5    11.11306       1950       1987
+      avgmin |         38    1.484395    1.129628       .198       3.35
+     avgwage |         38    2.072526    1.497109       .398      4.879
+       kaitz |         38    .3342895    .0971104       .155       .468
+      avgcov |         38    .4158158    .1525675       .201       .596
+-------------+---------------------------------------------------------
+        covt |         38    .4555263      .15594        .29        .66
+     mfgwage |         38    2.175263    1.625778        .43       5.33
+       prdef |         38    1.841737    .8997097       .859      3.787
+      prepop |         38    .3906579    .0356221       .318        .47
+     prepopf |         38    .3849737    .0355934       .314        .47
+-------------+---------------------------------------------------------
+       prgnp |         38    2604.411    1210.735      878.7     4496.7
+     prunemp |         38    15.03947    3.747615       10.3       23.4
+       usgnp |         38    2372.976    775.1241     1203.7     3819.6
+           t |         38        19.5    11.11306          1         38
+      post74 |         38    2.763158    4.426176          0         14
+-------------+---------------------------------------------------------
+    lprunemp |         38    2.682014    .2397699   2.332144   3.152736
+      lprgnp |         38    7.738812    .5333019   6.778443   8.411099
+      lusgnp |         38    7.717266    .3399512   7.093155   8.247901
+      lkaitz |         38   -1.141174    .3144796   -1.86433   -.759287
+     lprun_1 |          0
+-------------+---------------------------------------------------------
+     lprepop |         38   -.9440737    .0929775  -1.145704  -.7550226
+     lprep_1 |          0
+      mincov |         38    .2931978     .121779    .099995   .4582559
+     lmincov |         38   -1.323539    .4636298  -2.302635  -.7803276
+     lavgmin |         38    .0608953    .8805814  -1.619488    1.20896
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. eststo ex12_7: reg lprepop lmincov lusgnp lprgnp t
+
+      Source |       SS           df       MS      Number of obs   =   
+>      38
+-------------+----------------------------------   F(4, 33)        =   
+>   66.23
+       Model |  .284429837         4  .071107459   Prob > F        =   
+>  0.0000
+    Residual |   .03542846        33   .00107359   R-squared       =   
+>  0.8892
+-------------+----------------------------------   Adj R-squared   =   
+>  0.8758
+       Total |  .319858296        37  .008644819   Root MSE        =   
+>  .03277
+
+-----------------------------------------------------------------------
+> -------
+     lprepop |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+     lmincov |  -.2122612   .0401525    -5.29   0.000    -.2939519   -.
+> 1305704
+      lusgnp |   .4860432   .2219834     2.19   0.036     .0344145    .
+> 9376719
+      lprgnp |   .2852395   .0804922     3.54   0.001     .1214768    .
+> 4490022
+           t |  -.0266633   .0046267    -5.76   0.000    -.0360764   -.
+> 0172501
+       _cons |  -6.663416   1.257835    -5.30   0.000    -9.222501   -4
+> .104331
+-----------------------------------------------------------------------
+> -------
+
+. display e(r2)
+.88923702
+
+. 
+. esttab ex12_7 using "tabelaprmingwge12_7.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2 F, labels("Obs." "R²" "Estatística F"))
+(output written to tabelaprmingwge12_7.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. predict uhat, resid
+
+. scalar sigma  = e(rmse)
+
+. scalar se1    = _se[lmincov]
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. * Passo 2 regredir a variável de interesse nas demais controles e gua
+> rdar reísduos
+. quietly reg lmincov lusgnp lprgnp time
+variable time not found
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. * Passo 2 regredir a variável de interesse nas demais controles e gua
+> rdar reísduos
+. quietly reg lmincov lusgnp lprgnp t
+
+. predict rhat1, resid
+
+. 
+. * Passo 3: a_t = rhat1_t * uhat_t
+. gen a = rhat1 * uhat
+
+. 
+. * Passo 4: soma de a_t^2 + termos de autocovariância ponderados (g = 
+> 2)
+. local g = 2
+
+. gen a2 = a^2
+
+. quietly summarize a2
+
+. scalar nhat = r(sum)
+
+. 
+. forvalues h = 1/`g' {
+  2.     quietly gen double prod`h' = a * L`h'.a
+  3.     quietly summarize prod`h'
+  4.     scalar w`h'   = 1 - `h'/(`g'+1)
+  5.     scalar nhat   = nhat + 2*w`h'*r(sum)
+  6. }
+time variable not set
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. forvalues h = 1/`g' {
+  2.     quietly gen double prod`h' = a * L`h'.a
+  3.     quietly summarize prod`h'
+  4.     scalar w`h'   = 1 - `h'/(`g'+1)
+  5.     scalar nhat   = nhat + 2*w`h'*r(sum)
+  6. }
+invalid syntax
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. sort t   // garanta que os dados estão ordenados pela variável de tem
+> po
+
+. 
+. local g = 2
+
+. forvalues h = 1/`g' {
+  2.     quietly gen double a_lag`h' = a[_n-`h']
+  3.     quietly gen double prod`h'  = a * a_lag`h'
+  4.     quietly summarize prod`h'
+  5.     scalar w`h'  = 1 - `h'/(`g'+1)
+  6.     scalar nhat  = nhat + 2*w`h'*r(sum)
+  7. }
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. * Passo 5: erro-padrão robusto à correlação serial
+. scalar se_robust = (se1/sigma)^2 * sqrt(nhat)
+
+. 
+. di "n_hat = "      nhat
+n_hat = .00080491
+
+. di "SE robusto = " se_robust
+SE robusto = .04260487
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. di -0.212/0.04260487
+-4.975957
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. eststo ex12_71: prais lprepop lmincov lusgnp lprgnp time, corc rhotyp
+> e(regress)
+variable time not found
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. eststo ex12_71: prais lprepop lmincov lusgnp lprgnp t, corc rhotype(r
+> egress)
+time variable not set, use tsset varname ...
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. tsset year
+        time variable:  year, 1950 to 1987
+                delta:  1 unit
+
+. eststo ex12_71: prais lprepop lmincov lusgnp lprgnp t, corc rhotype(r
+> egress)
+
+Iteration 0:  rho = 0.0000
+Iteration 1:  rho = 0.4197
+Iteration 2:  rho = 0.5225
+Iteration 3:  rho = 0.5724
+Iteration 4:  rho = 0.5996
+Iteration 5:  rho = 0.6155
+Iteration 6:  rho = 0.6253
+Iteration 7:  rho = 0.6315
+Iteration 8:  rho = 0.6355
+Iteration 9:  rho = 0.6381
+Iteration 10:  rho = 0.6398
+Iteration 11:  rho = 0.6410
+Iteration 12:  rho = 0.6418
+Iteration 13:  rho = 0.6423
+Iteration 14:  rho = 0.6426
+Iteration 15:  rho = 0.6429
+Iteration 16:  rho = 0.6430
+Iteration 17:  rho = 0.6431
+Iteration 18:  rho = 0.6432
+Iteration 19:  rho = 0.6432
+Iteration 20:  rho = 0.6433
+Iteration 21:  rho = 0.6433
+Iteration 22:  rho = 0.6433
+Iteration 23:  rho = 0.6433
+Iteration 24:  rho = 0.6433
+Iteration 25:  rho = 0.6433
+Iteration 26:  rho = 0.6433
+Iteration 27:  rho = 0.6433
+Iteration 28:  rho = 0.6433
+Iteration 29:  rho = 0.6433
+
+Cochrane-Orcutt AR(1) regression -- iterated estimates
+
+      Source |       SS           df       MS      Number of obs   =   
+>      37
+-------------+----------------------------------   F(4, 32)        =   
+>   11.06
+       Model |  .031015979         4  .007753995   Prob > F        =   
+>  0.0000
+    Residual |  .022428345        32  .000700886   R-squared       =   
+>  0.5803
+-------------+----------------------------------   Adj R-squared   =   
+>  0.5279
+       Total |  .053444324        36  .001484565   Root MSE        =   
+>  .02647
+
+-----------------------------------------------------------------------
+> -------
+     lprepop |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+     lmincov |  -.1107555   .0446556    -2.48   0.019    -.2017161    -
+> .019795
+      lusgnp |   .3664579   .2201906     1.66   0.106    -.0820557    .
+> 8149714
+      lprgnp |   .2673695   .1119369     2.39   0.023     .0393615    .
+> 4953775
+           t |  -.0243278   .0057919    -4.20   0.000    -.0361257     
+> -.01253
+       _cons |  -5.518924   1.339622    -4.12   0.000    -8.247645   -2
+> .790202
+-------------+---------------------------------------------------------
+> -------
+         rho |   .6433412
+-----------------------------------------------------------------------
+> -------
+Durbin-Watson statistic (original)    1.013710
+Durbin-Watson statistic (transformed) 1.630401
+
+. 
+. esttab ex12_71 using "tabelaprmingwge12_71.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2 F, labels("Obs." "R²" "Estatística F"))
+(note: file tabelaprmingwge12_71.rtf not found)
+(output written to tabelaprmingwge12_71.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. tsset t
+        time variable:  t, 1 to 38
+                delta:  1 unit
+
+. eststo ex12_71: prais lprepop lmincov lusgnp lprgnp t, corc rhotype(r
+> egress)
+
+Iteration 0:  rho = 0.0000
+Iteration 1:  rho = 0.4197
+Iteration 2:  rho = 0.5225
+Iteration 3:  rho = 0.5724
+Iteration 4:  rho = 0.5996
+Iteration 5:  rho = 0.6155
+Iteration 6:  rho = 0.6253
+Iteration 7:  rho = 0.6315
+Iteration 8:  rho = 0.6355
+Iteration 9:  rho = 0.6381
+Iteration 10:  rho = 0.6398
+Iteration 11:  rho = 0.6410
+Iteration 12:  rho = 0.6418
+Iteration 13:  rho = 0.6423
+Iteration 14:  rho = 0.6426
+Iteration 15:  rho = 0.6429
+Iteration 16:  rho = 0.6430
+Iteration 17:  rho = 0.6431
+Iteration 18:  rho = 0.6432
+Iteration 19:  rho = 0.6432
+Iteration 20:  rho = 0.6433
+Iteration 21:  rho = 0.6433
+Iteration 22:  rho = 0.6433
+Iteration 23:  rho = 0.6433
+Iteration 24:  rho = 0.6433
+Iteration 25:  rho = 0.6433
+Iteration 26:  rho = 0.6433
+Iteration 27:  rho = 0.6433
+Iteration 28:  rho = 0.6433
+Iteration 29:  rho = 0.6433
+
+Cochrane-Orcutt AR(1) regression -- iterated estimates
+
+      Source |       SS           df       MS      Number of obs   =   
+>      37
+-------------+----------------------------------   F(4, 32)        =   
+>   11.06
+       Model |  .031015979         4  .007753995   Prob > F        =   
+>  0.0000
+    Residual |  .022428345        32  .000700886   R-squared       =   
+>  0.5803
+-------------+----------------------------------   Adj R-squared   =   
+>  0.5279
+       Total |  .053444324        36  .001484565   Root MSE        =   
+>  .02647
+
+-----------------------------------------------------------------------
+> -------
+     lprepop |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+     lmincov |  -.1107555   .0446556    -2.48   0.019    -.2017161    -
+> .019795
+      lusgnp |   .3664579   .2201906     1.66   0.106    -.0820557    .
+> 8149714
+      lprgnp |   .2673695   .1119369     2.39   0.023     .0393615    .
+> 4953775
+           t |  -.0243278   .0057919    -4.20   0.000    -.0361257     
+> -.01253
+       _cons |  -5.518924   1.339622    -4.12   0.000    -8.247645   -2
+> .790202
+-------------+---------------------------------------------------------
+> -------
+         rho |   .6433412
+-----------------------------------------------------------------------
+> -------
+Durbin-Watson statistic (original)    1.013710
+Durbin-Watson statistic (transformed) 1.630401
+
+. 
+. esttab ex12_71 using "tabelaprmingwge12_71.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2 F, labels("Obs." "R²" "Estatística F"))
+(note: file tabelaprmingwge12_71.rtf not found)
+(output written to tabelaprmingwge12_71.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. tsset year
+        time variable:  year, 1950 to 1987
+                delta:  1 unit
+
+. eststo ex12_71: prais lprepop lmincov lusgnp lprgnp year, corc rhotyp
+> e(regress)
+
+Iteration 0:  rho = 0.0000
+Iteration 1:  rho = 0.4197
+Iteration 2:  rho = 0.5225
+Iteration 3:  rho = 0.5724
+Iteration 4:  rho = 0.5996
+Iteration 5:  rho = 0.6155
+Iteration 6:  rho = 0.6253
+Iteration 7:  rho = 0.6315
+Iteration 8:  rho = 0.6355
+Iteration 9:  rho = 0.6381
+Iteration 10:  rho = 0.6398
+Iteration 11:  rho = 0.6410
+Iteration 12:  rho = 0.6418
+Iteration 13:  rho = 0.6423
+Iteration 14:  rho = 0.6426
+Iteration 15:  rho = 0.6429
+Iteration 16:  rho = 0.6430
+Iteration 17:  rho = 0.6431
+Iteration 18:  rho = 0.6432
+Iteration 19:  rho = 0.6432
+Iteration 20:  rho = 0.6433
+Iteration 21:  rho = 0.6433
+Iteration 22:  rho = 0.6433
+Iteration 23:  rho = 0.6433
+Iteration 24:  rho = 0.6433
+Iteration 25:  rho = 0.6433
+Iteration 26:  rho = 0.6433
+Iteration 27:  rho = 0.6433
+Iteration 28:  rho = 0.6433
+Iteration 29:  rho = 0.6433
+
+Cochrane-Orcutt AR(1) regression -- iterated estimates
+
+      Source |       SS           df       MS      Number of obs   =   
+>      37
+-------------+----------------------------------   F(4, 32)        =   
+>   11.06
+       Model |  .031015979         4  .007753995   Prob > F        =   
+>  0.0000
+    Residual |  .022428345        32  .000700886   R-squared       =   
+>  0.5803
+-------------+----------------------------------   Adj R-squared   =   
+>  0.5279
+       Total |  .053444324        36  .001484565   Root MSE        =   
+>  .02647
+
+-----------------------------------------------------------------------
+> -------
+     lprepop |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+     lmincov |  -.1107555   .0446556    -2.48   0.019    -.2017161    -
+> .019795
+      lusgnp |   .3664579   .2201906     1.66   0.106    -.0820557    .
+> 8149714
+      lprgnp |   .2673695   .1119369     2.39   0.023     .0393615    .
+> 4953775
+        year |  -.0243278   .0057919    -4.20   0.000    -.0361257     
+> -.01253
+       _cons |   41.89605   10.11421     4.14   0.000     21.29408    6
+> 2.49802
+-------------+---------------------------------------------------------
+> -------
+         rho |   .6433412
+-----------------------------------------------------------------------
+> -------
+Durbin-Watson statistic (original)    1.013710
+Durbin-Watson statistic (transformed) 1.630401
+
+. 
+. esttab ex12_71 using "tabelaprmingwge12_71.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2 F, labels("Obs." "R²" "Estatística F"))
+(note: file tabelaprmingwge12_71.rtf not found)
+(output written to tabelaprmingwge12_71.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2ca8_000000.tmp"
+
+. tsset year
+        time variable:  year, 1950 to 1987
+                delta:  1 unit
+
+. eststo ex12_71: prais lprepop lmincov lusgnp lprgnp year
+
+Iteration 0:  rho = 0.0000
+Iteration 1:  rho = 0.4197
+Iteration 2:  rho = 0.5325
+Iteration 3:  rho = 0.5796
+Iteration 4:  rho = 0.5999
+Iteration 5:  rho = 0.6086
+Iteration 6:  rho = 0.6123
+Iteration 7:  rho = 0.6139
+Iteration 8:  rho = 0.6146
+Iteration 9:  rho = 0.6149
+Iteration 10:  rho = 0.6150
+Iteration 11:  rho = 0.6151
+Iteration 12:  rho = 0.6151
+Iteration 13:  rho = 0.6151
+Iteration 14:  rho = 0.6151
+Iteration 15:  rho = 0.6151
+Iteration 16:  rho = 0.6151
+
+Prais-Winsten AR(1) regression -- iterated estimates
+
+      Source |       SS           df       MS      Number of obs   =   
+>      38
+-------------+----------------------------------   F(4, 33)        =   
+>   24.87
+       Model |  .080887905         4  .020221976   Prob > F        =   
+>  0.0000
+    Residual |  .026836003        33  .000813212   R-squared       =   
+>  0.7509
+-------------+----------------------------------   Adj R-squared   =   
+>  0.7207
+       Total |  .107723908        37  .002911457   Root MSE        =   
+>  .02852
+
+-----------------------------------------------------------------------
+> -------
+     lprepop |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+     lmincov |  -.1477108   .0458424    -3.22   0.003    -.2409778   -.
+> 0544438
+      lusgnp |   .2557002   .2317508     1.10   0.278    -.2158004    .
+> 7272007
+      lprgnp |    .251386   .1164628     2.16   0.038     .0144407    .
+> 4883313
+        year |  -.0205014    .005856    -3.50   0.001    -.0324156   -.
+> 0085872
+       _cons |    35.3045   10.21675     3.46   0.002     14.51837    5
+> 6.09063
+-------------+---------------------------------------------------------
+> -------
+         rho |   .6151388
+-----------------------------------------------------------------------
+> -------
+Durbin-Watson statistic (original)    1.013710
+Durbin-Watson statistic (transformed) 1.736279
+
+. 
+. esttab ex12_71 using "tabelaprmingwge12_71.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2 F, labels("Obs." "R²" "Estatística F"))
+(output written to tabelaprmingwge12_71.rtf)
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\ExemplosW
+> ooldridge\Cap12\prminwge12_7.dta", replace
+file C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\ExemplosWool
+> dridge\Cap12\prminwge12_7.dta saved
+
+. exit, clear

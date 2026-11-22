@@ -1,0 +1,348 @@
+-------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade
+> \UFBA\PIBIC\Stata\ExemplosWooldridge\Cap11\fert
+> il_11_6_8.log
+  log type:  text
+ opened on:  15 Jul 2026, 12:14:26
+
+. 
+. *Importando dados
+. import excel "fertil3.xls", firstrow clear
+
+. 
+. *Sumário
+. destring pe_1 pe_2 pe_3 pe_4 cgfr cpe cpe_1 cpe
+> _2 cpe_3 cpe_4 gfr_1 cgfr_1 cgfr_2 cgfr_3 cgfr_
+> 4 gfr_2, replace
+pe_1: all characters numeric; replaced as double
+(1 missing value generated)
+pe_2: all characters numeric; replaced as double
+(2 missing values generated)
+pe_3: all characters numeric; replaced as double
+(3 missing values generated)
+pe_4: all characters numeric; replaced as double
+(4 missing values generated)
+cgfr: all characters numeric; replaced as double
+(1 missing value generated)
+cpe: all characters numeric; replaced as double
+(1 missing value generated)
+cpe_1: all characters numeric; replaced as double
+(2 missing values generated)
+cpe_2: all characters numeric; replaced as double
+(3 missing values generated)
+cpe_3: all characters numeric; replaced as double
+(4 missing values generated)
+cpe_4: all characters numeric; replaced as double
+(5 missing values generated)
+gfr_1: all characters numeric; replaced as double
+(1 missing value generated)
+cgfr_1: all characters numeric; replaced as doubl
+> e
+(2 missing values generated)
+cgfr_2: all characters numeric; replaced as doubl
+> e
+(3 missing values generated)
+cgfr_3: all characters numeric; replaced as doubl
+> e
+(4 missing values generated)
+cgfr_4: all characters numeric; replaced as doubl
+> e
+(5 missing values generated)
+gfr_2: all characters numeric; replaced as double
+(2 missing values generated)
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev
+> .       Min        Max
+-------------+-----------------------------------
+> ----------------------
+         gfr |         72    95.63194    19.80464
+>        65.4      126.6
+          pe |         72    100.4015    65.87563
+>           0     243.83
+        year |         72      1948.5    20.92845
+>        1913       1984
+           t |         72        36.5    20.92845
+>           1         72
+         tsq |         72    1764.167    1576.502
+>           1       5184
+-------------+-----------------------------------
+> ----------------------
+        pe_1 |         71    100.6339    66.31477
+>           0     243.83
+        pe_2 |         70    100.7503    66.78628
+>           0     243.83
+        pe_3 |         69    100.7316    67.27538
+>           0     243.83
+        pe_4 |         68    100.4584      67.737
+>           0     243.83
+        pill |         72    .3055556    .4638749
+>           0          1
+-------------+-----------------------------------
+> ----------------------
+         ww2 |         72    .0694444    .2559923
+>           0          1
+         tcu |         72       95922    108841.2
+>           1     373248
+        cgfr |         71   -.8352112    4.258743
+>   -8.600006         16
+         cpe |         71     1.18169    17.78409
+>   -45.23999     102.63
+       cpe_1 |         70    1.321286    17.87328
+>   -45.23999     102.63
+-------------+-----------------------------------
+> ----------------------
+       cpe_2 |         69     1.47884    17.95518
+>   -45.23999     102.63
+       cpe_3 |         68    1.754559    17.94092
+>   -45.23999     102.63
+       cpe_4 |         67    1.838358    18.06291
+>   -45.23999     102.63
+       gfr_1 |         71    96.05775    19.61088
+>        65.5      126.6
+      cgfr_1 |         70   -.8414285    4.289168
+>   -8.600006         16
+-------------+-----------------------------------
+> ----------------------
+      cgfr_2 |         69    -.831884    4.319842
+>   -8.600006         16
+      cgfr_3 |         68    -.842647    4.351028
+>   -8.600006         16
+      cgfr_4 |         67   -.8402985    4.383823
+>   -8.600006         16
+       gfr_2 |         70       96.49    19.40881
+>        65.5      126.6
+
+. 
+. *Calculando autocorrelação sem detrending
+. corr gfr L.gfr if !missing(L.gfr)
+time variable not set
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2770_0
+> 00000.tmp"
+
+. tsset year
+        time variable:  year, 1913 to 1984
+                delta:  1 unit
+
+. corr gfr L.gfr if !missing(L.gfr)
+(obs=71)
+
+             |                 L.
+             |      gfr      gfr
+-------------+------------------
+         gfr |
+         --. |   1.0000
+         L1. |   0.9765   1.0000
+
+
+. corr pe L.pe if !missing(L.pe)
+(obs=71)
+
+             |                 L.
+             |       pe       pe
+-------------+------------------
+          pe |
+         --. |   1.0000
+         L1. |   0.9636   1.0000
+
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2770_0
+> 00000.tmp"
+
+. ** Regressão 1
+. eststo ex11_61: reg cgfr cpe
+
+      Source |       SS           df       MS    
+>   Number of obs   =        71
+-------------+---------------------------------- 
+>   F(1, 69)        =      2.26
+       Model |  40.3237264         1  40.3237264 
+>   Prob > F        =    0.1370
+    Residual |  1229.25864        69  17.8153426 
+>   R-squared       =    0.0318
+-------------+---------------------------------- 
+>   Adj R-squared   =    0.0177
+       Total |  1269.58236        70  18.1368909 
+>   Root MSE        =    4.2208
+
+-------------------------------------------------
+> -----------------------------
+        cgfr |      Coef.   Std. Err.      t    P
+> >|t|                                           
+>          [95% Con                              
+>                  f. Interval]
+-------------+-----------------------------------
+> -----------------------------
+         cpe |  -.0426776   .0283672    -1.50   0
+> .137                                           
+>         -.0992686                              
+>                      .0139134
+       _cons |  -.7847796   .5020398    -1.56   0
+> .123                                           
+>         -1.786322                              
+>                      .2167625
+-------------------------------------------------
+> -----------------------------
+
+. display e(r2)
+.03176141
+
+. 
+. esttab ex11_61 using "fertil3-11_61.rtf", repla
+> ce ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file fertil3-11_61.rtf not found)
+(output written to fertil3-11_61.rtf)
+
+. 
+.         
+. /*
+> p1chapeu[gfr] =  0.9765 
+> p1chapeu[pe] =   0.9636 
+> */
+. 
+. ** Regressão 2
+. eststo ex11_62: reg cgfr cpe cpe_1 cpe_2 
+
+      Source |       SS           df       MS    
+>   Number of obs   =        69
+-------------+---------------------------------- 
+>   F(3, 65)        =      6.56
+       Model |  293.259839         3  97.7532796 
+>   Prob > F        =    0.0006
+    Residual |  968.199965        65  14.8953841 
+>   R-squared       =    0.2325
+-------------+---------------------------------- 
+>   Adj R-squared   =    0.1971
+       Total |   1261.4598        68  18.5508795 
+>   Root MSE        =    3.8595
+
+-------------------------------------------------
+> -----------------------------
+        cgfr |      Coef.   Std. Err.      t    P
+> >|t|                                           
+>          [95% Con                              
+>                  f. Interval]
+-------------+-----------------------------------
+> -----------------------------
+         cpe |  -.0362021   .0267737    -1.35   0
+> .181                                           
+>          -.089673                              
+>                      .0172687
+       cpe_1 |  -.0139706    .027554    -0.51   0
+> .614                                           
+>         -.0689997                              
+>                      .0410584
+       cpe_2 |   .1099896   .0268797     4.09   0
+> .000                                           
+>          .0563071                              
+>                      .1636721
+       _cons |  -.9636788   .4677599    -2.06   0
+> .043                                           
+>          -1.89786                              
+>                     -.0294976
+-------------------------------------------------
+> -----------------------------
+
+. display e(r2)
+.23247656
+
+. 
+. esttab ex11_62 using "fertil3-11_62.rtf", repla
+> ce ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file fertil3-11_62.rtf not found)
+(output written to fertil3-11_62.rtf)
+
+.         
+. 
+. /*
+> 
+> */
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2770_0
+> 00000.tmp"
+
+. eststo ex11_8: reg cgfr cpe cpe_1 cpe_2 cgfr_1
+
+      Source |       SS           df       MS    
+>   Number of obs   =        69
+-------------+---------------------------------- 
+>   F(4, 64)        =      7.46
+       Model |  401.286136         4  100.321534 
+>   Prob > F        =    0.0001
+    Residual |  860.173668        64  13.4402136 
+>   R-squared       =    0.3181
+-------------+---------------------------------- 
+>   Adj R-squared   =    0.2755
+       Total |   1261.4598        68  18.5508795 
+>   Root MSE        =    3.6661
+
+-------------------------------------------------
+> -----------------------------
+        cgfr |      Coef.   Std. Err.      t    P
+> >|t|                                           
+>          [95% Con                              
+>                  f. Interval]
+-------------+-----------------------------------
+> -----------------------------
+         cpe |  -.0454721   .0256417    -1.77   0
+> .081                                           
+>         -.0966972                              
+>                       .005753
+       cpe_1 |    .002064   .0267776     0.08   0
+> .939                                           
+>         -.0514303                              
+>                      .0555584
+       cpe_2 |   .1051346   .0255904     4.11   0
+> .000                                           
+>           .054012                              
+>                      .1562572
+      cgfr_1 |   .3002422   .1059034     2.84   0
+> .006                                           
+>          .0886757                              
+>                      .5118086
+       _cons |  -.7021595   .4537988    -1.55   0
+> .127                                           
+>         -1.608727                              
+>                      .2044079
+-------------------------------------------------
+> -----------------------------
+
+. display e(r2)
+.3181125
+
+. 
+. esttab ex11_8 using "fertil3-11_8.rtf", replace
+>  ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file fertil3-11_8.rtf not found)
+(output written to fertil3-11_8.rtf)
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA
+> \PIBIC\Stata\ExemplosWooldridge\Cap11\fertil311
+> _6e8.dta"
+file C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PI
+> BIC\Stata\ExemplosWooldridge\Cap11\fertil311_6e
+> 8.dta saved
+
+. exit, clear
