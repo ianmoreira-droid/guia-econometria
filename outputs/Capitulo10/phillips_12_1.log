@@ -1,0 +1,296 @@
+-----------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stat
+> a\ExemplosWooldridge\Cap10\phillips_12_1.log
+  log type:  text
+ opened on:  18 Jul 2026, 17:37:46
+
+. 
+. *Importando dados
+. import excel "phillips.xls", firstrow clear
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min     
+>    Max
+-------------+---------------------------------------------------
+> ------
+        year |         49        1972    14.28869       1948     
+>   1996
+        unem |         49    5.740816    1.562839        2.9     
+>    9.7
+         inf |         49    4.108163    3.182821       -1.2     
+>   13.5
+      unem_1 |          0
+       inf_1 |          0
+-------------+---------------------------------------------------
+> ------
+      unem_2 |          0
+       inf_2 |          0
+       cunem |          0
+        cinf |          0
+     cunem_1 |          0
+-------------+---------------------------------------------------
+> ------
+      cinf_1 |          0
+
+. destring unem_1 inf_1 unem_2 inf_2 cunem cinf cunem_1 cinf_1, r
+> eplace
+unem_1: all characters numeric; replaced as double
+(1 missing value generated)
+inf_1: all characters numeric; replaced as double
+(1 missing value generated)
+unem_2: all characters numeric; replaced as double
+(2 missing values generated)
+inf_2: all characters numeric; replaced as double
+(2 missing values generated)
+cunem: all characters numeric; replaced as double
+(1 missing value generated)
+cinf: all characters numeric; replaced as double
+(1 missing value generated)
+cunem_1: all characters numeric; replaced as double
+(2 missing values generated)
+cinf_1: all characters numeric; replaced as double
+(2 missing values generated)
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min     
+>    Max
+-------------+---------------------------------------------------
+> ------
+        year |         49        1972    14.28869       1948     
+>   1996
+        unem |         49    5.740816    1.562839        2.9     
+>    9.7
+         inf |         49    4.108163    3.182821       -1.2     
+>   13.5
+      unem_1 |         48    5.747917    1.578579        2.9     
+>    9.7
+       inf_1 |         48     4.13125    3.212354       -1.2     
+>   13.5
+-------------+---------------------------------------------------
+> ------
+      unem_2 |         47    5.751064    1.595493        2.9     
+>    9.7
+       inf_2 |         47    4.159574    3.241018       -1.2     
+>   13.5
+       cunem |         48    .0333333    1.120094       -2.1     
+>    2.9
+        cinf |         48     -.10625    2.566926       -9.3     
+>    6.6
+     cunem_1 |         47    .0382979    1.131669       -2.1     
+>    2.9
+-------------+---------------------------------------------------
+> ------
+      cinf_1 |         47    -.112766    2.594276       -9.3     
+>    6.6
+
+. 
+. ** Regressão - eststo salva resultados - No conjunto restrito d
+> e variáveis
+. eststo ex12_1: reg inf unem
+
+      Source |       SS           df       MS      Number of obs 
+>   =        49
+-------------+----------------------------------   F(1, 47)      
+>   =      2.62
+       Model |  25.6369586         1  25.6369586   Prob > F      
+>   =    0.1125
+    Residual |  460.619776        47  9.80042077   R-squared     
+>   =    0.0527
+-------------+----------------------------------   Adj R-squared 
+>   =    0.0326
+       Total |  486.256735        48  10.1303486   Root MSE      
+>   =    3.1306
+
+-----------------------------------------------------------------
+> -------------
+         inf |      Coef.   Std. Err.      t    P>|t|     [95% Co
+> n                                                              
+>  f. Interval]
+-------------+---------------------------------------------------
+> -------------
+        unem |   .4676257   .2891262     1.62   0.112    -.114021
+> 2                                                              
+>      1.049273
+       _cons |    1.42361   1.719015     0.83   0.412    -2.03460
+> 2                                                              
+>      4.881822
+-----------------------------------------------------------------
+> -------------
+
+. display e(r2)
+.05272309
+
+. 
+. esttab ex12_1 using "phillips12_1.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file phillips12_1.rtf not found)
+(output written to phillips12_1.rtf)
+
+. 
+. predict uhat, resid
+
+. tsset year
+        time variable:  year, 1948 to 1996
+                delta:  1 unit
+
+. gen Luhat = L.uhat
+(1 missing value generated)
+
+. reg uhat Luhat
+
+      Source |       SS           df       MS      Number of obs 
+>   =        48
+-------------+----------------------------------   F(1, 46)      
+>   =     24.34
+       Model |   150.91704         1   150.91704   Prob > F      
+>   =    0.0000
+    Residual |  285.198404        46  6.19996531   R-squared     
+>   =    0.3460
+-------------+----------------------------------   Adj R-squared 
+>   =    0.3318
+       Total |  436.115445        47  9.27905202   Root MSE      
+>   =      2.49
+
+-----------------------------------------------------------------
+> -------------
+        uhat |      Coef.   Std. Err.      t    P>|t|     [95% Co
+> n                                                              
+>  f. Interval]
+-------------+---------------------------------------------------
+> -------------
+       Luhat |   .5729695   .1161334     4.93   0.000     .339205
+> 2                                                              
+>      .8067338
+       _cons |  -.1133967    .359404    -0.32   0.754    -.836839
+> 3                                                              
+>       .610046
+-----------------------------------------------------------------
+> -------------
+
+. /*
+>                 (1)
+>                 inf
+> unem    0.468
+>            (0.289)
+>         
+> _cons   1.424
+>            (1.719)
+> Obs.    49
+> R2              0.0527
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> */
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD3ed4_000000.tmp"
+
+. eststo ex12_1_1: reg cinf unem
+
+      Source |       SS           df       MS      Number of obs 
+>   =        48
+-------------+----------------------------------   F(1, 46)      
+>   =      5.56
+       Model |   33.382999         1   33.382999   Prob > F      
+>   =    0.0227
+    Residual |  276.305126        46  6.00663318   R-squared     
+>   =    0.1078
+-------------+----------------------------------   Adj R-squared 
+>   =    0.0884
+       Total |  309.688125        47  6.58910905   Root MSE      
+>   =    2.4508
+
+-----------------------------------------------------------------
+> -------------
+        cinf |      Coef.   Std. Err.      t    P>|t|     [95% Co
+> n                                                              
+>  f. Interval]
+-------------+---------------------------------------------------
+> -------------
+        unem |  -.5425869   .2301559    -2.36   0.023    -1.00586
+> 7                                                              
+>      -.079307
+       _cons |   3.030581    1.37681     2.20   0.033     .259206
+> 1                                                              
+>      5.801955
+-----------------------------------------------------------------
+> -------------
+
+. display e(r2)
+.10779554
+
+. 
+. esttab ex12_1_1 using "phillips12_11.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file phillips12_11.rtf not found)
+(output written to phillips12_11.rtf)
+
+. 
+. predict uhat2, resid
+(1 missing value generated)
+
+. tsset year
+        time variable:  year, 1948 to 1996
+                delta:  1 unit
+
+. gen Luhat2 = L.uhat2
+(2 missing values generated)
+
+. reg uhat2 Luhat2
+
+      Source |       SS           df       MS      Number of obs 
+>   =        47
+-------------+----------------------------------   F(1, 45)      
+>   =      0.08
+       Model |  .350023876         1  .350023876   Prob > F      
+>   =    0.7752
+    Residual |   190.83737        45  4.24083043   R-squared     
+>   =    0.0018
+-------------+----------------------------------   Adj R-squared 
+>   =   -0.0204
+       Total |  191.187393        46  4.15624768   Root MSE      
+>   =    2.0593
+
+-----------------------------------------------------------------
+> -------------
+       uhat2 |      Coef.   Std. Err.      t    P>|t|     [95% Co
+> n                                                              
+>  f. Interval]
+-------------+---------------------------------------------------
+> -------------
+      Luhat2 |  -.0355928   .1238908    -0.29   0.775    -.285121
+> 6                                                              
+>       .213936
+       _cons |   .1941655   .3003839     0.65   0.521    -.410838
+> 7                                                              
+>      .7991698
+-----------------------------------------------------------------
+> -------------
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD3ed4_000000.tmp"
+
+. cd "C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Exemp
+> losWooldridge\Cap12"
+C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap12
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Exe
+> mplosWooldridge\Cap12\phillips12_1.dta"
+file C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Exempl
+> osWooldridge\Cap12\phillips12_1.dta saved
+
+. exit, clear

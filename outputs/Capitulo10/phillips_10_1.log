@@ -1,0 +1,135 @@
+-------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Exempl
+> osWooldridge\Cap10\phillips_10_1.log
+  log type:  text
+ opened on:  19 Jun 2026, 13:07:12
+
+. 
+. *Importando dados
+. import excel "phillips.xls", firstrow clear
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        year |         49        1972    14.28869       1948       1996
+        unem |         49    5.740816    1.562839        2.9        9.7
+         inf |         49    4.108163    3.182821       -1.2       13.5
+      unem_1 |          0
+       inf_1 |          0
+-------------+---------------------------------------------------------
+      unem_2 |          0
+       inf_2 |          0
+       cunem |          0
+        cinf |          0
+     cunem_1 |          0
+-------------+---------------------------------------------------------
+      cinf_1 |          0
+
+. 
+. destring unem_1 inf_1 unem_2 inf_2 cunem cinf cunem_1 cinf_1, replace
+unem_1: all characters numeric; replaced as double
+(1 missing value generated)
+inf_1: all characters numeric; replaced as double
+(1 missing value generated)
+unem_2: all characters numeric; replaced as double
+(2 missing values generated)
+inf_2: all characters numeric; replaced as double
+(2 missing values generated)
+cunem: all characters numeric; replaced as double
+(1 missing value generated)
+cinf: all characters numeric; replaced as double
+(1 missing value generated)
+cunem_1: all characters numeric; replaced as double
+(2 missing values generated)
+cinf_1: all characters numeric; replaced as double
+(2 missing values generated)
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        year |         49        1972    14.28869       1948       1996
+        unem |         49    5.740816    1.562839        2.9        9.7
+         inf |         49    4.108163    3.182821       -1.2       13.5
+      unem_1 |         48    5.747917    1.578579        2.9        9.7
+       inf_1 |         48     4.13125    3.212354       -1.2       13.5
+-------------+---------------------------------------------------------
+      unem_2 |         47    5.751064    1.595493        2.9        9.7
+       inf_2 |         47    4.159574    3.241018       -1.2       13.5
+       cunem |         48    .0333333    1.120094       -2.1        2.9
+        cinf |         48     -.10625    2.566926       -9.3        6.6
+     cunem_1 |         47    .0382979    1.131669       -2.1        2.9
+-------------+---------------------------------------------------------
+      cinf_1 |         47    -.112766    2.594276       -9.3        6.6
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4c60_000000.tmp"
+
+. eststo ex10_1: reg inf unem
+
+      Source |       SS           df       MS      Number of obs   =     
+>    49
+-------------+----------------------------------   F(1, 47)        =     
+>  2.62
+       Model |  25.6369586         1  25.6369586   Prob > F        =    0
+> .1125
+    Residual |  460.619776        47  9.80042077   R-squared       =    0
+> .0527
+-------------+----------------------------------   Adj R-squared   =    0
+> .0326
+       Total |  486.256735        48  10.1303486   Root MSE        =    3
+> .1306
+
+-------------------------------------------------------------------------
+> -----
+         inf |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Inte
+> rval]
+-------------+-----------------------------------------------------------
+> -----
+        unem |   .4676257   .2891262     1.62   0.112    -.1140212    1.0
+> 49273
+       _cons |    1.42361   1.719015     0.83   0.412    -2.034602    4.8
+> 81822
+-------------------------------------------------------------------------
+> -----
+
+. display e(r2)
+.05272309
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4c60_000000.tmp"
+
+. esttab ex10_1 using "tabcrime5_3.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tabcrime5_3.rtf not found)
+(output written to tabcrime5_3.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4c60_000000.tmp"
+
+. esttab ex10_1 using "phillips10_1.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file phillips10_1.rtf not found)
+(output written to phillips10_1.rtf)
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap10\phillips10_1.dta"
+file C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\ExemplosWooldr
+> idge\Cap10\phillips10_1.dta saved
+
+. exit, clear

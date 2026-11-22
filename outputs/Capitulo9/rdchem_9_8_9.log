@@ -1,0 +1,368 @@
+----------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap9\rdchem_9_8_9.log
+  log type:  text
+ opened on:  10 Nov 2026, 13:53:38
+
+. 
+. *Importando dados
+. import excel "rdchem.xls", firstrow cl
+> ear
+
+. 
+. destring _all, replace force
+rd already numeric; no replace
+sales already numeric; no replace
+profits already numeric; no replace
+rdintens already numeric; no replace
+profmarg already numeric; no replace
+salessq already numeric; no replace
+lsales already numeric; no replace
+lrd already numeric; no replace
+
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean   
+>  Std. Dev.       Min        Max
+-------------+--------------------------
+> -------------------------------
+          rd |         32    153.6813   
+>  324.6358        1.7       1428
+       sales |         32    3797.012   
+>  7587.992         42      39709
+     profits |         32    370.5031   
+>  830.9303       -4.3       4154
+    rdintens |         32    3.265625   
+>  1.874079       1.03       9.42
+    profmarg |         32    9.822188   
+>  7.242209      -3.22      27.19
+-------------+--------------------------
+> -------------------------------
+     salessq |         32    7.03e+07   
+>  2.84e+08       1764   1.58e+09
+      lsales |         32    7.164942   
+>  1.537853    3.73767   10.58933
+         lrd |         32    3.602825   
+>  1.734352   .5306283    7.26403
+
+. 
+. *** Exemplo 9.8
+. 
+. *Regressão 1
+. eststo ex9_81: reg rdintens sales prof
+> marg
+
+      Source |       SS           df    
+>    MS      Number of obs   =        32
+-------------+--------------------------
+> --------   F(2, 29)        =      1.20
+       Model |  8.32805001         2    
+> 4.164025   Prob > F        =    0.3154
+    Residual |  100.549337        29  3.
+> 46721853   R-squared       =    0.0765
+-------------+--------------------------
+> --------   Adj R-squared   =    0.0128
+       Total |  108.877388        31  3.
+> 51217379   Root MSE        =     1.862
+
+----------------------------------------
+> --------------------------------------
+    rdintens |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+       sales |   .0000535   .0000441    
+>  1.21                                 
+>         0.234                         
+>                  -.0000366            
+>                               .0001437
+    profmarg |   .0447439   .0461789    
+>  0.97                                 
+>         0.341                         
+>                  -.0497025            
+>                               .1391904
+       _cons |   2.622954   .5854943    
+>  4.48                                 
+>         0.000                         
+>                   1.425484            
+>                               3.820424
+----------------------------------------
+> --------------------------------------
+
+. 
+. esttab ex9_81 using "tab9_8_1.rtf", re
+> place ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab9_8_1.rtf not found)
+(output written to tab9_8_1.rtf)
+
+. 
+. /*
+>                         rdintens
+> sales           0.0000535
+>                         (0.0000441)
+>                 
+> profmarg        0.0447
+>                         (0.0462)
+>         
+> _cons           2.623***
+>                         (0.585)
+> Obs.            32
+> R2                      0.0765
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> */
+. 
+. *Regressão 2
+. eststo ex9_82: reg rdintens sales prof
+> marg if sales < 20000
+
+      Source |       SS           df    
+>    MS      Number of obs   =        31
+-------------+--------------------------
+> --------   F(2, 28)        =      2.93
+       Model |  18.8350674         2  9.
+> 41753372   Prob > F        =    0.0698
+    Residual |  89.9269067        28  3.
+> 21167524   R-squared       =    0.1732
+-------------+--------------------------
+> --------   Adj R-squared   =    0.1141
+       Total |  108.761974        30  3.
+> 62539914   Root MSE        =    1.7921
+
+----------------------------------------
+> --------------------------------------
+    rdintens |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+       sales |   .0001858   .0000842    
+>  2.21                                 
+>         0.036                         
+>                   .0000133            
+>                               .0003583
+    profmarg |   .0479742   .0444801    
+>  1.08                                 
+>         0.290                         
+>                  -.0431391            
+>                               .1390874
+       _cons |   2.294401   .5917564    
+>  3.88                                 
+>         0.001                         
+>                   1.082243            
+>                               3.506559
+----------------------------------------
+> --------------------------------------
+
+. 
+. esttab ex9_82 using "tab9_8_2.rtf", re
+> place ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab9_8_2.rtf not found)
+(output written to tab9_8_2.rtf)
+
+. 
+. /*
+>                         rdintens
+> sales           0.000186**
+>                         (0.0000842)
+>         
+> profmarg        0.0480
+>                         (0.0445)
+>         
+> _cons           2.294***
+>                         (0.592)
+> Obs.            31
+> R2                      0.173
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> */      
+. twoway ///
+>     (scatter rdintens sales) ///
+>     (pcarrowi 5.6 34500 4.5 39000, lco
+> lor(black)) ///
+>     , ///
+>     text(6.1 34500 "possible" "outlier
+> ", justification(center)) ///
+>     xtitle("firm sales (in millions of
+>  dollars)") ///
+>     ytitle("R&D as a percentage of sal
+> es") ///
+>     xlabel(0 10000 20000 30000 40000) 
+> ///
+>     ylabel(0 5 10) ///
+>     legend(off) ///
+>     graphregion(color(white)) ///
+>     plotregion(color(white))
+
+. graph export "figura9_8.png", as(png) 
+> replace
+(file figura9_8.png written in PNG forma
+> t)
+
+. 
+. *** Exemplo 9.9
+. *Regressão 1
+. eststo ex9_91: reg lrd lsales profmarg
+
+      Source |       SS           df    
+>    MS      Number of obs   =        32
+-------------+--------------------------
+> --------   F(2, 29)        =    162.24
+       Model |  85.5970595         2  42
+> .7985297   Prob > F        =    0.0000
+    Residual |  7.65020571        29  .2
+> 63800197   R-squared       =    0.9180
+-------------+--------------------------
+> --------   Adj R-squared   =    0.9123
+       Total |  93.2472652        31   3
+> .0079763   Root MSE        =    .51361
+
+----------------------------------------
+> --------------------------------------
+         lrd |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+      lsales |   1.084228   .0601941    
+> 18.01                                 
+>         0.000                         
+>                   .9611173            
+>                               1.207339
+    profmarg |   .0216594    .012782    
+>  1.69                                 
+>         0.101                         
+>                  -.0044827            
+>                               .0478015
+       _cons |   -4.37835   .4680132    
+> -9.36                                 
+>         0.000                         
+>                  -5.335544            
+>                              -3.421155
+----------------------------------------
+> --------------------------------------
+
+. 
+. esttab ex9_91 using "tab9_9_1.rtf", re
+> place ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab9_9_1.rtf not found)
+(output written to tab9_9_1.rtf)
+
+. 
+. /*
+>                         lrd
+> lsales          1.084***
+>                         (0.0602)
+>         
+> profmarg        0.0217
+>                         (0.0128)
+>         
+> _cons           -4.378***
+>                         (0.468)
+> Obs.            32
+> R2                      0.918
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> */      
+. *Regressão 2
+. eststo ex9_92: reg lrd lsales profmarg
+>  if sales < 20000
+
+      Source |       SS           df    
+>    MS      Number of obs   =        31
+-------------+--------------------------
+> --------   F(2, 28)        =    131.42
+       Model |  71.7655451         2  35
+> .8827725   Prob > F        =    0.0000
+    Residual |  7.64489714        28  .2
+> 73032041   R-squared       =    0.9037
+-------------+--------------------------
+> --------   Adj R-squared   =    0.8969
+       Total |  79.4104422        30  2.
+> 64701474   Root MSE        =    .52252
+
+----------------------------------------
+> --------------------------------------
+         lrd |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+      lsales |   1.088057   .0671128    
+> 16.21                                 
+>         0.000                         
+>                   .9505826            
+>                               1.225531
+    profmarg |    .021759   .0130233    
+>  1.67                                 
+>         0.106                         
+>                   -.004918            
+>                                .048436
+       _cons |  -4.404225   .5110168    
+> -8.62                                 
+>         0.000                         
+>                  -5.450996            
+>                              -3.357455
+----------------------------------------
+> --------------------------------------
+
+. 
+. esttab ex9_92 using "tab9_9_2.rtf", re
+> place ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab9_9_2.rtf not found)
+(output written to tab9_9_2.rtf)
+
+. /*
+>                         lrd
+> lsales          1.088***
+>                         (0.0671)
+>         
+> profmarg        0.0218
+>                         (0.0130)
+>         
+> _cons           -4.404***
+>                         (0.511)
+> Obs.            31
+> R2                      0.904
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> Por que, que se testar a hipótese nula
+>  H0 = 1 
+> contra H1 > 1, não se rejeita H0?
+> */
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap9\rdchem_9_8_9.log
+  log type:  text
+ closed on:  10 Nov 2026, 13:53:40
+----------------------------------------

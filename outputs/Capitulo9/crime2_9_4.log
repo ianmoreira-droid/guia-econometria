@@ -1,0 +1,326 @@
+----------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap9\crime2_9_4.log
+  log type:  text
+ opened on:   9 Nov 2026, 13:59:17
+
+. 
+. *Importando dados
+. import excel "crime2.xls", firstrow cl
+> ear
+
+. 
+. destring _all, replace force
+pop already numeric; no replace
+crimes already numeric; no replace
+unem already numeric; no replace
+officers already numeric; no replace
+pcinc already numeric; no replace
+west already numeric; no replace
+nrtheast already numeric; no replace
+south already numeric; no replace
+year already numeric; no replace
+area already numeric; no replace
+d87 already numeric; no replace
+popden already numeric; no replace
+crmrte already numeric; no replace
+offarea already numeric; no replace
+lawexpc already numeric; no replace
+polpc already numeric; no replace
+lpop already numeric; no replace
+loffic already numeric; no replace
+lpcinc already numeric; no replace
+llawexpc already numeric; no replace
+lpopden already numeric; no replace
+lcrimes already numeric; no replace
+larea already numeric; no replace
+lcrmrte already numeric; no replace
+clcrimes: all characters numeric; replac
+> ed as double
+(46 missing values generated)
+clpop: all characters numeric; replaced 
+> as double
+(46 missing values generated)
+clcrmrte: all characters numeric; replac
+> ed as double
+(46 missing values generated)
+lpolpc already numeric; no replace
+clpolpc: all characters numeric; replace
+> d as double
+(46 missing values generated)
+cllawexp: all characters numeric; replac
+> ed as double
+(46 missing values generated)
+cunem: all characters numeric; replaced 
+> as double
+(46 missing values generated)
+clpopden: all characters numeric; replac
+> ed as double
+(46 missing values generated)
+lcrmrt_1: all characters numeric; replac
+> ed as double
+(46 missing values generated)
+ccrmrte: all characters numeric; replace
+> d as double
+(46 missing values generated)
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean   
+>  Std. Dev.       Min        Max
+-------------+--------------------------
+> -------------------------------
+         pop |         92    395461.3   
+>  253091.1      56168    1181868
+      crimes |         92    39663.53   
+>   29692.1       4124     164452
+        unem |         92    7.971739   
+>  3.374218        2.4       20.3
+    officers |         92    923.1196   
+>  768.8827        109       5042
+       pcinc |         92     8917.88   
+>  2223.422       4525      14474
+-------------+--------------------------
+> -------------------------------
+        west |         92    .3043478   
+>  .4626519          0          1
+    nrtheast |         92    .1521739   
+>  .3611576          0          1
+       south |         92     .326087   
+>  .4713482          0          1
+        year |         92        84.5   
+>  2.513699         82         87
+        area |         92    122.7304   
+>  125.5295         13        604
+-------------+--------------------------
+> -------------------------------
+         d87 |         92          .5   
+>  .5027397          0          1
+      popden |         92    4984.489   
+>   3172.98   703.7964   16550.28
+      crmrte |         92    100.7908   
+>  29.84309   50.01925   179.4173
+     offarea |         92    12.17464   
+>   10.3105   1.269868   48.38174
+     lawexpc |         92     958.643   
+>    313.88     377.54    2262.44
+-------------+--------------------------
+> -------------------------------
+       polpc |         92    2.251738   
+>  .6315046   1.283939   4.619234
+        lpop |         92    12.67311   
+>  .6967486    10.9361   13.98261
+      loffic |         92    6.539545   
+>  .7881314   4.691348   8.525558
+      lpcinc |         92    9.065107   
+>  .2500385   8.417373    9.58011
+    llawexpc |         92    6.817245   
+>   .308913   5.933677   7.724199
+-------------+--------------------------
+> -------------------------------
+     lpopden |         92    8.317279   
+>  .6547398   6.556489   9.714158
+     lcrimes |         92    10.33774   
+>  .7420559   8.324579   12.01037
+       larea |         92    4.355827   
+>  .9613247   2.564949   6.403574
+     lcrmrte |         92    4.572393   
+>  .2837847   3.912408   5.189714
+    clcrimes |         46    .0549864   
+>  .2041391  -.3492174    .578269
+-------------+--------------------------
+> -------------------------------
+       clpop |         46    .0182945   
+>  .0819109  -.1057701   .2351189
+    clcrmrte |         46    .0366918   
+>    .19033  -.4502778   .4517183
+      lpolpc |         92    .7741945   
+>  .2747979   .2499326   1.530229
+     clpolpc |         46    .0267074   
+>  .0874302  -.1334558   .2882912
+    cllawexp |         46    .3171951   
+>  .1740045    .086122    .977952
+-------------+--------------------------
+> -------------------------------
+       cunem |         46   -4.165217   
+>  3.404847      -12.1        1.7
+    clpopden |         46    .0182946   
+>  .0819109  -.1057701   .2351193
+    lcrmrt_1 |         46    4.554047   
+>  .2373764   3.990161   5.131764
+     ccrmrte |         46    6.163754   
+>  21.21634  -28.44835   65.21219
+
+. 
+. *** Exemplo 9.4
+. 
+. *Regressão 1
+. eststo ex9_41: reg lcrmrte unem llawex
+> pc if d87 == 1
+
+      Source |       SS           df    
+>    MS      Number of obs   =        46
+-------------+--------------------------
+> --------   F(2, 43)        =      1.30
+       Model |  .271987261         2  .1
+> 35993631   Prob > F        =    0.2824
+    Residual |  4.48998167        43  .1
+> 04418178   R-squared       =    0.0571
+-------------+--------------------------
+> --------   Adj R-squared   =    0.0133
+       Total |  4.76196893        45  .1
+> 05821532   Root MSE        =    .32314
+
+----------------------------------------
+> --------------------------------------
+     lcrmrte |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+        unem |  -.0290032   .0323387    
+> -0.90                                 
+>         0.375                         
+>                  -.0942205            
+>                               .0362141
+    llawexpc |   .2033652   .1726534    
+>  1.18                                 
+>         0.245                         
+>                  -.1448235            
+>                                .551554
+       _cons |   3.342899   1.250527    
+>  2.67                                 
+>         0.011                         
+>                   .8209717            
+>                               5.864826
+----------------------------------------
+> --------------------------------------
+
+. 
+. esttab ex9_41 using "tab9_4_1.rtf", re
+> place ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab9_4_1.rtf not found)
+(output written to tab9_4_1.rtf)
+
+. 
+. /*
+>                         lcrmrte
+> unem            -0.0290
+>                         (0.0323)
+>         
+> llawexpc        0.203
+>                         (0.173)
+>         
+> _cons           3.343**
+>                         (1.251)
+> Obs.            46
+> R2                      0.0571
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> */
+. 
+. *Regressão 2
+. eststo ex9_42: reg lcrmrte unem llawex
+> pc lcrmrt_1 if year == 87
+
+      Source |       SS           df    
+>    MS      Number of obs   =        46
+-------------+--------------------------
+> --------   F(3, 42)        =     29.73
+       Model |  3.23732706         3  1.
+> 07910902   Prob > F        =    0.0000
+    Residual |  1.52464187        42  .0
+> 36300997   R-squared       =    0.6798
+-------------+--------------------------
+> --------   Adj R-squared   =    0.6570
+       Total |  4.76196893        45  .1
+> 05821532   Root MSE        =    .19053
+
+----------------------------------------
+> --------------------------------------
+     lcrmrte |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+        unem |   .0086211   .0195167    
+>  0.44                                 
+>         0.661                         
+>                  -.0307651            
+>                               .0480073
+    llawexpc |  -.1395763   .1086412    
+> -1.28                                 
+>         0.206                         
+>                  -.3588231            
+>                               .0796705
+    lcrmrt_1 |   1.193923   .1320986    
+>  9.04                                 
+>         0.000                         
+>                   .9273368            
+>                               1.460508
+       _cons |   .0764509   .8211436    
+>  0.09                                 
+>         0.926                         
+>                  -1.580684            
+>                               1.733586
+----------------------------------------
+> --------------------------------------
+
+. 
+. esttab ex9_42 using "tab9_4_2.rtf", re
+> place ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab9_4_2.rtf not found)
+(output written to tab9_4_2.rtf)
+
+. 
+. 
+. /*
+>                         lcrmrte
+> unem            0.00862
+>                         (0.0195)
+>         
+> llawexpc        -0.140
+>                         (0.109)
+>         
+> lcrmrt_1        1.194***
+>                         (0.132)
+>         
+> _cons           0.0765
+>                         (0.821)
+> Obs.            46
+> R2                      0.680
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> Incluir o crime em 82 aumenta bastante
+>  o tanto que é explicado
+> permitindo obtenção de uma estimativa 
+> mais adequada do efeito
+> ceteris paribus dos gastos com seguran
+> ça sobre crime
+> */      
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap9\crime2_9_4.log
+  log type:  text
+ closed on:   9 Nov 2026, 13:59:17
+----------------------------------------
