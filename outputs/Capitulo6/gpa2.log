@@ -1,0 +1,277 @@
+----------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\PIBIC\Stata\Ex
+> emplosWooldridge\Cap6\gpa2.log
+  log type:  text
+ opened on:   1 Jun 2026, 07:29:11
+
+. 
+. *Importando dados
+. import excel "gpa2.xls", firstrow clear
+
+. 
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min    
+>     Max
+-------------+--------------------------------------------------
+> -------
+         sat |      4,137    1030.331    139.4014        470    
+>    1540
+      tothrs |      4,137    52.83225    35.32959          6    
+>     137
+      colgpa |      4,137    2.652686    .6586347          0    
+>       4
+     athlete |      4,137    .0468939    .2114371          0    
+>       1
+    verbmath |      4,137    .8805369    .1491229     .25974    
+> 1.66667
+-------------+--------------------------------------------------
+> -------
+       hsize |      4,137    2.799727    1.736579        .03    
+>     9.4
+      hsrank |      4,137    52.83007    64.68358          1    
+>     634
+      hsperc |      4,137    19.23707    16.56873   .1666667    
+>      92
+      female |      4,137    .4496012    .4975136          0    
+>       1
+       white |      4,137    .9255499    .2625337          0    
+>       1
+-------------+--------------------------------------------------
+> -------
+       black |      4,137    .0553541    .2286978          0    
+>       1
+     hsizesq |      4,137    10.85345    12.62305      .0009    
+>   88.36
+
+. 
+. **6.5.1
+. *Regressão - eststo salva resultados
+. eststo ex6_51: reg colgpa sat hsperc hsize hsizesq
+
+      Source |       SS           df       MS      Number of obs
+>    =     4,137
+-------------+----------------------------------   F(4, 4132)   
+>    =    398.02
+       Model |  499.030497         4  124.757624   Prob > F     
+>    =    0.0000
+    Residual |  1295.16517     4,132  .313447523   R-squared    
+>    =    0.2781
+-------------+----------------------------------   Adj R-squared
+>    =    0.2774
+       Total |  1794.19566     4,136  .433799725   Root MSE     
+>    =    .55986
+
+----------------------------------------------------------------
+> --------------
+      colgpa |      Coef.   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+         sat |   .0014925   .0000652    22.89   0.000     .00136
+> 46                                                            
+>       .0016204
+      hsperc |  -.0138558    .000561   -24.70   0.000    -.01495
+> 57                                                            
+>      -.0127559
+       hsize |  -.0608815   .0165012    -3.69   0.000    -.09323
+> 28                                                            
+>      -.0285302
+     hsizesq |   .0054603   .0022698     2.41   0.016     .00101
+> 02                                                            
+>       .0099104
+       _cons |   1.492652   .0753414    19.81   0.000     1.3449
+> 42                                                            
+>       1.640362
+----------------------------------------------------------------
+> --------------
+
+. 
+. esttab ex6_52 using "tabela6_51.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2 r2_a rmse, ///
+>           labels("Obs." "R²" "R² Ajustado" "σ̂"))
+estimation result ex6_52 not found
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD14f4_000000.tmp"
+
+. eststo ex6_51: reg colgpa sat hsperc hsize hsizesq
+
+      Source |       SS           df       MS      Number of obs
+>    =     4,137
+-------------+----------------------------------   F(4, 4132)   
+>    =    398.02
+       Model |  499.030497         4  124.757624   Prob > F     
+>    =    0.0000
+    Residual |  1295.16517     4,132  .313447523   R-squared    
+>    =    0.2781
+-------------+----------------------------------   Adj R-squared
+>    =    0.2774
+       Total |  1794.19566     4,136  .433799725   Root MSE     
+>    =    .55986
+
+----------------------------------------------------------------
+> --------------
+      colgpa |      Coef.   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+         sat |   .0014925   .0000652    22.89   0.000     .00136
+> 46                                                            
+>       .0016204
+      hsperc |  -.0138558    .000561   -24.70   0.000    -.01495
+> 57                                                            
+>      -.0127559
+       hsize |  -.0608815   .0165012    -3.69   0.000    -.09323
+> 28                                                            
+>      -.0285302
+     hsizesq |   .0054603   .0022698     2.41   0.016     .00101
+> 02                                                            
+>       .0099104
+       _cons |   1.492652   .0753414    19.81   0.000     1.3449
+> 42                                                            
+>       1.640362
+----------------------------------------------------------------
+> --------------
+
+. 
+. esttab ex6_51 using "tabela6_51.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2 r2_a rmse, ///
+>           labels("Obs." "R²" "R² Ajustado" "σ̂"))
+(output written to tabela6_51.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD14f4_000000.tmp"
+
+. margins, at(sat=1200 hsperc=30 hsize=5 hsizesq=25)
+
+Adjusted predictions                            Number of obs   
+>   =      4,137
+Model VCE    : OLS
+
+Expression   : Linear prediction, predict()
+at           : sat             =        1200
+               hsperc          =          30
+               hsize           =           5
+               hsizesq         =          25
+
+----------------------------------------------------------------
+> --------------
+             |            Delta-method
+             |     Margin   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+       _cons |   2.700075   .0198778   135.83   0.000     2.6611
+> 04                                                            
+>       2.739047
+----------------------------------------------------------------
+> --------------
+
+. *y =  2.700075
+. 
+. * Gerando variáveis para facilitar obter IC
+. gen sat0 = sat - 1200
+
+. gen hsperc0 = hsperc - 30
+
+. gen hsize0 = hsize - 5
+
+. gen hsizesq0 = hsizesq - 25
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD14f4_000000.tmp"
+
+. eststo ex6_52: reg colgpa sat0 hsperc0 hsize0 hsizesq0
+
+      Source |       SS           df       MS      Number of obs
+>    =     4,137
+-------------+----------------------------------   F(4, 4132)   
+>    =    398.02
+       Model |  499.030497         4  124.757624   Prob > F     
+>    =    0.0000
+    Residual |  1295.16517     4,132  .313447523   R-squared    
+>    =    0.2781
+-------------+----------------------------------   Adj R-squared
+>    =    0.2774
+       Total |  1794.19566     4,136  .433799725   Root MSE     
+>    =    .55986
+
+----------------------------------------------------------------
+> --------------
+      colgpa |      Coef.   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+        sat0 |   .0014925   .0000652    22.89   0.000     .00136
+> 46                                                            
+>       .0016204
+     hsperc0 |  -.0138558    .000561   -24.70   0.000    -.01495
+> 57                                                            
+>      -.0127559
+      hsize0 |  -.0608815   .0165012    -3.69   0.000    -.09323
+> 28                                                            
+>      -.0285302
+    hsizesq0 |   .0054603   .0022698     2.41   0.016     .00101
+> 02                                                            
+>       .0099104
+       _cons |   2.700075   .0198778   135.83   0.000     2.6611
+> 04                                                            
+>       2.739047
+----------------------------------------------------------------
+> --------------
+
+. 
+. esttab ex6_52 using "tabela6_52.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2 r2_a rmse, ///
+>           labels("Obs." "R²" "R² Ajustado"  "σ̂"))
+(output written to tabela6_52.rtf)
+
+.                   
+. display _b[_cons] - 1.96*_se[_cons]
+2.6611149
+
+. display _b[_cons] + 1.96*_se[_cons]
+2.7390361
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD14f4_000000.tmp"
+
+. di sqrt(0.02^2 + 0.560^2)
+.56035703
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD14f4_000000.tmp"
+
+. display sqrt(_se[_cons]^2 + e(rmse)^2)
+.56021661
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\PIBIC\Stata\Exemplo
+> sWooldridge\Cap6\gpa2.dta", replace
+file C:\Users\ianpm\Desktop\Ian\Faculdade\PIBIC\Stata\ExemplosWo
+> oldridge\Cap6\gpa2.dta saved
+
+. exit, clear

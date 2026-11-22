@@ -1,0 +1,175 @@
+---------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Facul
+> dade\UFBA\PIBIC\Stata\ExemplosWooldridge\Ca
+> p3\k401cap3.log
+  log type:  text
+ opened on:  19 Oct 2026, 19:04:04
+
+. 
+. *Importando dados
+. import excel "401k.xls", firstrow clear
+
+. 
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std.
+>  Dev.       Min        Max
+-------------+-------------------------------
+> --------------------------
+       prate |      1,534    87.36291    16.7
+> 1654          3        100
+       mrate |      1,534    .7315124    .779
+> 5394        .01       4.91
+     totpart |      1,534    1354.231    4629
+> .265         50      58811
+     totelig |      1,534    1628.535    5370
+> .719         51      70429
+         age |      1,534    13.18123    9.17
+> 1114          4         51
+-------------+-------------------------------
+> --------------------------
+      totemp |      1,534    3567.321    1119
+> 9.88         58     140000
+        sole |      1,534    .4876141    .500
+> 0096          0          1
+     ltotemp |      1,534    6.686034    1.45
+> 3375   4.060443   11.88025
+
+. 
+. *Regressão - eststo salva resultados
+. eststo ex3_3: reg prate mrate age
+
+      Source |       SS           df       MS
+>       Number of obs   =     1,534
+-------------+-------------------------------
+> ---   F(2, 1531)      =     77.79
+       Model |  39517.1119         2  19758.5
+> 559   Prob > F        =    0.0000
+    Residual |  388868.428     1,531   253.99
+> 636   R-squared       =    0.0922
+-------------+-------------------------------
+> ---   Adj R-squared   =    0.0911
+       Total |  428385.539     1,533  279.442
+> 622   Root MSE        =    15.937
+
+---------------------------------------------
+> ---------------------------------
+       prate |      Coef.   Std. Err.      t 
+>    P>|t|                                   
+>              [95% Con                      
+>                      f. Interval]
+-------------+-------------------------------
+> ---------------------------------
+       mrate |   5.521289   .5258844    10.50
+>    0.000                                   
+>              4.489759                      
+>                          6.552819
+         age |   .2431466   .0446999     5.44
+>    0.000                                   
+>              .1554671                      
+>                           .330826
+       _cons |   80.11905   .7790208   102.85
+>    0.000                                   
+>              78.59099                      
+>                          81.64711
+---------------------------------------------
+> ---------------------------------
+
+. 
+. 
+. ***** TABELA COM O RESULTADO  - SAlVA O ARQ
+> UIVO NO SEU DIRETORIO
+. esttab ex3_3 using "tab401k.rtf", replace /
+> //
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(output written to tab401k.rtf)
+
+. 
+. /*      
+>                 prate
+> mrate   5.521***
+>         (0.526)
+>         
+> age        0.243***
+>             (0.0447)
+>         
+> _cons   80.12***
+>            (0.779)
+> Obs.    1534
+> R2              0.0922
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> */
+. eststo ex3_31: reg prate mrate 
+
+      Source |       SS           df       MS
+>       Number of obs   =     1,534
+-------------+-------------------------------
+> ---   F(1, 1532)      =    123.68
+       Model |  32001.7271         1  32001.7
+> 271   Prob > F        =    0.0000
+    Residual |  396383.812     1,532   258.73
+> 617   R-squared       =    0.0747
+-------------+-------------------------------
+> ---   Adj R-squared   =    0.0741
+       Total |  428385.539     1,533  279.442
+> 622   Root MSE        =    16.085
+
+---------------------------------------------
+> ---------------------------------
+       prate |      Coef.   Std. Err.      t 
+>    P>|t|                                   
+>              [95% Con                      
+>                      f. Interval]
+-------------+-------------------------------
+> ---------------------------------
+       mrate |   5.861079   .5270107    11.12
+>    0.000                                   
+>               4.82734                      
+>                          6.894818
+       _cons |   83.07546   .5632844   147.48
+>    0.000                                   
+>              81.97057                      
+>                          84.18035
+---------------------------------------------
+> ---------------------------------
+
+. esttab ex3_31 using "tab401k1.rtf", replace
+>  ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+file tab401k1.rtf is read-only; cannot be
+    modified or erased
+r(608);
+
+end of do-file
+
+r(608);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD35
+> e8_000000.tmp"
+
+. corr mrate age
+(obs=1,534)
+
+             |    mrate      age
+-------------+------------------
+       mrate |   1.0000
+         age |   0.1188   1.0000
+
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\
+> UFBA\PIBIC\Stata\ExemplosWooldridge\Cap3\40
+> 1kcap3.dta", replace
+file C:\Users\ianpm\Desktop\Ian\Faculdade\UFB
+> A\PIBIC\Stata\ExemplosWooldridge\Cap3\401kc
+> ap3.dta saved
+
+. exit, clear

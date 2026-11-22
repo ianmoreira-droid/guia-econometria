@@ -1,0 +1,195 @@
+-----------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\PIBIC\Stata\ExemplosW
+> ooldridge\Cap5\bwght5.log
+  log type:  text
+ opened on:  15 Apr 2026, 17:45:25
+
+. 
+. *Importando dados
+. import excel "bwght.xls", firstrow clear
+
+. type BWGHT.DES
+BWGHT.DES
+
+faminc    cigtax    cigprice  bwght     fatheduc  motheduc  parity    m
+> ale     
+white     cigs      lbwght    bwghtlbs  packs     lfaminc   
+
+  Obs:  1388
+
+  1. faminc                   1988 family income, $1000s
+  2. cigtax                   cig. tax in home state, 1988
+  3. cigprice                 cig. price in home state, 1988
+  4. bwght                    birth weight, ounces
+  5. fatheduc                 father's yrs of educ
+  6. motheduc                 mother's yrs of educ
+  7. parity                   birth order of child
+  8. male                     =1 if male child
+  9. white                    =1 if white
+ 10. cigs                     cigs smked per day while preg
+ 11. lbwght                   log of bwght
+ 12. bwghtlbs                 birth weight, pounds
+ 13. packs                    packs smked per day while preg
+ 14. lfaminc                  log(faminc)
+
+. 
+. rename (A-N) (faminc cigtax cigprice bwght fatheduc motheduc parity m
+> ale white cigs lbwght bwghtlbs packs lfaminc)
+
+. 
+. label variable faminc     "1988 family income, $1000s"
+
+. label variable cigtax     "cig. tax in home state, 1988"
+
+. label variable cigprice   "cig. price in home state, 1988"
+
+. label variable bwght      "birth weight, ounces"
+
+. label variable fatheduc   "father's yrs of educ"
+
+. label variable motheduc   "mother's yrs of educ"
+
+. label variable parity     "birth order of child"
+
+. label variable male       "=1 if male child"
+
+. label variable white      "=1 if white"
+
+. label variable cigs       "cigs smked per day while preg"
+
+. label variable lbwght     "log of bwght"
+
+. label variable bwghtlbs   "birth weight, pounds"
+
+. label variable packs      "packs smked per day while preg"
+
+. label variable lfaminc    "log(faminc)"
+
+. 
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      faminc |      1,387    29.03785     18.7414         .5         65
+      cigtax |      1,387    19.55516    7.797978          2         38
+    cigprice |      1,387     130.565    10.24578      103.8      152.5
+       bwght |      1,387    118.7066    20.35964         23        271
+    fatheduc |          0
+-------------+---------------------------------------------------------
+    motheduc |          0
+      parity |      1,387    1.633021    .8941882          1          6
+        male |      1,387    .5205479    .4997578          0          1
+       white |      1,387    .7844268    .4113677          0          1
+        cigs |      1,387    2.088681    5.974579          0         50
+-------------+---------------------------------------------------------
+      lbwght |      1,387    4.760081    .1907221   3.135494   5.602119
+    bwghtlbs |      1,387     7.41916    1.272477     1.4375    16.9375
+       packs |      1,387     .104434    .2987289          0        2.5
+     lfaminc |      1,387    3.071609    .9183093  -.6931472   4.174387
+
+. 
+. *Regressão - eststo salva resultados
+. eststo ex5_21: reg lbwght cigs lfaminc
+
+      Source |       SS           df       MS      Number of obs   =   
+>   1,387
+-------------+----------------------------------   F(2, 1384)      =   
+>   18.30
+       Model |  1.29891742         2  .649458711   Prob > F        =   
+>  0.0000
+    Residual |  49.1166995     1,384  .035488945   R-squared       =   
+>  0.0258
+-------------+----------------------------------   Adj R-squared   =   
+>  0.0244
+       Total |  50.4156169     1,386  .036374904   Root MSE        =   
+>  .18839
+
+-----------------------------------------------------------------------
+> -------
+      lbwght |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+        cigs |  -.0040853   .0008585    -4.76   0.000    -.0057695   -.
+> 0024011
+     lfaminc |   .0162338   .0055857     2.91   0.004     .0052764    .
+> 0271912
+       _cons |    4.71875   .0182551   258.49   0.000     4.682939     
+> 4.75456
+-----------------------------------------------------------------------
+> -------
+
+. display e(r2)
+.02576419
+
+. 
+. esttab ex5_21 using "bwght51.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(output written to bwght51.rtf)
+
+. 
+. 
+. *Regressão até a observação 694     
+. eststo ex5_22: reg lbwght cigs lfaminc in 1/694
+
+      Source |       SS           df       MS      Number of obs   =   
+>     694
+-------------+----------------------------------   F(2, 691)       =   
+>   10.55
+       Model |  .813251569         2  .406625784   Prob > F        =   
+>  0.0000
+    Residual |  26.6375024       691  .038549208   R-squared       =   
+>  0.0296
+-------------+----------------------------------   Adj R-squared   =   
+>  0.0268
+       Total |   27.450754       693  .039611478   Root MSE        =   
+>  .19634
+
+-----------------------------------------------------------------------
+> -------
+      lbwght |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+        cigs |  -.0046645   .0013335    -3.50   0.000    -.0072827   -.
+> 0020464
+     lfaminc |   .0193189   .0081997     2.36   0.019     .0032197    .
+> 0354182
+       _cons |   4.706355    .027096   173.69   0.000     4.653154    4
+> .759555
+-----------------------------------------------------------------------
+> -------
+
+. display e(r2)
+.02962584
+
+. 
+. esttab ex5_22 using "bwght52.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(output written to bwght52.rtf)
+
+. /*
+> se(Betaj) =~ cj/√n 
+> dividindo erro padrão da população completa, 
+> pelo erro-padrão da metade da população
+> (c/n^1/2) / (c/(n/2)^1/2) = (1/2)^1/2 = 0.707106781
+> 
+> 
+> */
+. 
+. 
+. 
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\PIBIC\Stata\ExemplosW
+> ooldridge\Cap5\bwght5.log
+  log type:  text
+ closed on:  15 Apr 2026, 17:45:25
+-----------------------------------------------------------------------

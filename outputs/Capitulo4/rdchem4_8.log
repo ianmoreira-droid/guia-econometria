@@ -1,0 +1,207 @@
+----------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap4\rdchem4_8.log
+  log type:  text
+ opened on:   8 Nov 2026, 18:02:53
+
+. 
+. *Importando dados
+. import excel "rdchem.xls", clear
+
+. type RDCHEM.DES
+RDCHEM.DES
+
+rd        sales     profits   rdintens  
+> profmarg  salessq   lsales    lrd     
+>  
+
+  Obs:    32
+
+  1. rd                       R&D spendi
+> ng, millions $
+  2. sales                    firm sales
+> , millions $
+  3. profits                  profits, m
+> illions $
+  4. rdintens                 rd as perc
+> ent of sales
+  5. profmarg                 profits as
+>  percent of sales
+  6. salessq                  sales^2
+  7. lsales                   log(sales)
+  8. lrd                      log(rd)
+
+. 
+. rename(A-H) (rd sales profits rdintens
+>  profmarg salessq lsales lrd)
+
+. 
+. label var rd              "R&D spendin
+> g, millions $"
+
+. label var sales           "firm sales,
+>  millions $"
+
+. label var profits         "profits, mi
+> llions $"
+
+. label var rdintens        "rd as perce
+> nt of sales"
+
+. label var profmarg        "profits as 
+> percent of sales"
+
+. label var salessq         "sales^2"
+
+. label var lsales          "log(sales)"
+
+. label var lrd             "log(rd)"
+
+. 
+. summarize
+
+    Variable |        Obs        Mean   
+>  Std. Dev.       Min        Max
+-------------+--------------------------
+> -------------------------------
+          rd |         32    153.6813   
+>  324.6358        1.7       1428
+       sales |         32    3797.012   
+>  7587.992         42      39709
+     profits |         32    370.5031   
+>  830.9303       -4.3       4154
+    rdintens |         32    3.265625   
+>  1.874079       1.03       9.42
+    profmarg |         32    9.822188   
+>  7.242209      -3.22      27.19
+-------------+--------------------------
+> -------------------------------
+     salessq |         32    7.03e+07   
+>  2.84e+08       1764   1.58e+09
+      lsales |         32    7.164942   
+>  1.537853    3.73767   10.58933
+         lrd |         32    3.602825   
+>  1.734352   .5306283    7.26403
+
+. 
+. eststo ex4_8: reg lrd lsales profmarg
+
+      Source |       SS           df    
+>    MS      Number of obs   =        32
+-------------+--------------------------
+> --------   F(2, 29)        =    162.24
+       Model |  85.5970595         2  42
+> .7985297   Prob > F        =    0.0000
+    Residual |  7.65020571        29  .2
+> 63800197   R-squared       =    0.9180
+-------------+--------------------------
+> --------   Adj R-squared   =    0.9123
+       Total |  93.2472652        31   3
+> .0079763   Root MSE        =    .51361
+
+----------------------------------------
+> --------------------------------------
+         lrd |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+      lsales |   1.084228   .0601941    
+> 18.01                                 
+>         0.000                         
+>                   .9611173            
+>                               1.207339
+    profmarg |   .0216594    .012782    
+>  1.69                                 
+>         0.101                         
+>                  -.0044827            
+>                               .0478015
+       _cons |   -4.37835   .4680132    
+> -9.36                                 
+>         0.000                         
+>                  -5.335544            
+>                              -3.421155
+----------------------------------------
+> --------------------------------------
+
+. 
+. ***** TABELA COM O RESULTADO  - SAlVA 
+> O ARQUIVO NO SEU DIRETORIO
+. esttab ex4_8 using "tab4_8.rtf", repla
+> ce ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab4_8.rtf not found)
+(output written to tab4_8.rtf)
+
+. 
+. * Invervalo de confiança
+. display _b[lsales] - invttail(e(df_r),
+>  0.025)*_se[lsales]
+.96111728
+
+. display _b[lsales] + invttail(e(df_r),
+>  0.025)*_se[lsales]
+1.2073389
+
+. lincom profmarg
+
+ ( 1)  profmarg = 0
+
+----------------------------------------
+> --------------------------------------
+         lrd |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+         (1) |   .0216594    .012782    
+>  1.69                                 
+>         0.101                         
+>                  -.0044827            
+>                               .0478015
+----------------------------------------
+> --------------------------------------
+
+. /*
+>                         lrd
+> lsales          1.084***
+>                         (0.0602)
+>         
+> profmarg        0.0217
+>                         (0.0128)
+>                 
+> _cons           -4.378***
+>                         (0.468)
+> Obs.            32
+> R2                      0.918
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> intervalo de confiança(Beta = Beta_cha
+> peu +- c.erropadrao)
+> df = n - k - 1 = 32 - 2 - 1 = 29
+> valor crítico a  2,5% c = 2.045
+> para Beta_lsales(0.961, 1.21) -> não d
+> á pra rejeitar H_0: Beta_lsales = 1 em
+>  favor de H_1: != 1
+> para Beta_profmarg(-0.0045, 0.0479) 
+> */
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Facul
+> dade\UFBA\PIBIC\Stata\ExemplosWooldrid
+> ge\Cap4\rdchem4_8.dta"
+file C:\Users\ianpm\Desktop\Ian\Faculdad
+> e\UFBA\PIBIC\Stata\ExemplosWooldridge\
+> Cap4\rdchem4_8.dta saved
+
+. exit, clear

@@ -1,0 +1,337 @@
+---------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Facul
+> dade\UFBA\PIBIC\Stata\ExemplosWooldridge\Ca
+> p6\ex6_78.log
+  log type:  text
+ opened on:  21 Oct 2026, 18:26:41
+
+. 
+. *Importando dados
+. import excel "ceosal2.xls", firstrow clear
+
+. 
+. summarize
+
+    Variable |        Obs        Mean    Std.
+>  Dev.       Min        Max
+-------------+-------------------------------
+> --------------------------
+      salary |        177    865.8644    587.
+> 5893        100       5299
+         age |        177    56.42938     8.4
+> 2189         33         86
+     college |        177    .9717514    .166
+> 1523          0          1
+        grad |        177    .5310734    .500
+> 4492          0          1
+      comten |        177    22.50282    12.2
+> 9473          2         58
+-------------+-------------------------------
+> --------------------------
+      ceoten |        177    7.954802    7.15
+> 0826          0         37
+       sales |        177    3529.463    6088
+> .654         29      51300
+     profits |        177    207.8305    404.
+> 4543       -463       2700
+      mktval |        177    3600.316    6442
+> .276        387      45400
+     lsalary |        177    6.582848    .606
+> 0595    4.60517   8.575274
+-------------+-------------------------------
+> --------------------------
+      lsales |        177    7.231025    1.43
+> 2086   3.367296   10.84545
+     lmktval |        177     7.39941    1.13
+> 3414   5.958425   10.72327
+    comtensq |        177    656.6836    577.
+> 1227          4       3364
+    ceotensq |        177    114.1243     212
+> .566          0       1369
+    profmarg |        177    6.420111    17.8
+> 6074  -203.0769   47.45763
+
+. 
+. **6.7
+. *Regressão - eststo salva resultados
+. eststo ex6_7: reg lsalary lsales lmktval ce
+> oten
+
+      Source |       SS           df       MS
+>       Number of obs   =       177
+-------------+-------------------------------
+> ---   F(3, 173)       =     26.91
+       Model |  20.5672447         3  6.85574
+> 822   Prob > F        =    0.0000
+    Residual |  44.0789757       173  .254791
+> 767   R-squared       =    0.3182
+-------------+-------------------------------
+> ---   Adj R-squared   =    0.3063
+       Total |  64.6462203       176   .36730
+> 807   Root MSE        =    .50477
+
+---------------------------------------------
+> ---------------------------------
+     lsalary |      Coef.   Std. Err.      t 
+>    P>|t|                                   
+>              [95% Con                      
+>                      f. Interval]
+-------------+-------------------------------
+> ---------------------------------
+      lsales |   .1628545   .0392421     4.15
+>    0.000                                   
+>              .0853995                      
+>                          .2403094
+     lmktval |    .109243   .0495947     2.20
+>    0.029                                   
+>              .0113545                      
+>                          .2071315
+      ceoten |   .0117054   .0053261     2.20
+>    0.029                                   
+>               .001193                      
+>                          .0222178
+       _cons |   4.503795   .2572344    17.51
+>    0.000                                   
+>              3.996073                      
+>                          5.011517
+---------------------------------------------
+> ---------------------------------
+
+. 
+. esttab ex6_7 using "tabela6_7.rtf", replace
+>  ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(output written to tabela6_7.rtf)
+
+.         
+. 
+. display 4.504 + .163*ln(5000) + .109*ln(100
+> 00) + .0117*10
+7.0132296
+
+. display exp(7.013)
+1110.9825
+
+. 
+. predict u_chap, resid
+
+. gen smear = exp(u_chap)
+
+. summ smear
+
+    Variable |        Obs        Mean    Std.
+>  Dev.       Min        Max
+-------------+-------------------------------
+> --------------------------
+       smear |        177    1.135661    .697
+> 0543   .0823372   6.378022
+
+. 
+. scalar s = r(mean)
+
+. 
+. display exp(7.013)*s
+1261.6998
+
+. /*
+>                 (1)
+>                 lsalary
+> lsales  0.163***
+>                 (0.0392)
+>         
+> lmktval 0.109**
+>                 (0.0496)
+>         
+> ceoten  0.0117**
+>                 (0.00533)
+>         
+> _cons   4.504***
+>                 (0.257)
+> Obs.    177
+> R2              0.318
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> tem o valor predito [4.504 + .163*ln(5000) 
+> + .109*ln(10000) + .0117*10]
+> mas quer se estimar o y não o log(y) ou sej
+> a queremos o salário
+> pelo valor predito, salário = 1110.983
+> 
+> Pelo estimador smearing de Duan, o termo al
+> fa0 =~ 1.136
+> o valor predito seria exp(7.013)*s = 1261.6
+> 998
+> esse estimador serve para corrigir o viés d
+> e predição quando a variável
+> dependente está em log
+>         
+> */
+. 
+. **6.8
+. *Regressão - eststo salva resultados
+. eststo ex6_8: reg salary sales mktval ceote
+> n
+
+      Source |       SS           df       MS
+>       Number of obs   =       177
+-------------+-------------------------------
+> ---   F(3, 173)       =     14.53
+       Model |  12230632.6         3  4076877
+> .52   Prob > F        =    0.0000
+    Residual |  48535332.2       173  280551.
+> 053   R-squared       =    0.2013
+-------------+-------------------------------
+> ---   Adj R-squared   =    0.1874
+       Total |  60765964.7       176  345261.
+> 163   Root MSE        =    529.67
+
+---------------------------------------------
+> ---------------------------------
+      salary |      Coef.   Std. Err.      t 
+>    P>|t|                                   
+>              [95% Con                      
+>                      f. Interval]
+-------------+-------------------------------
+> ---------------------------------
+       sales |   .0190191   .0100561     1.89
+>    0.060                                   
+>             -.0008294                      
+>                          .0388676
+      mktval |   .0234003   .0094826     2.47
+>    0.015                                   
+>              .0046839                      
+>                          .0421167
+      ceoten |   12.70337   5.618052     2.26
+>    0.025                                   
+>              1.614616                      
+>                          23.79211
+       _cons |   613.4361   65.23685     9.40
+>    0.000                                   
+>              484.6735                      
+>                          742.1987
+---------------------------------------------
+> ---------------------------------
+
+. 
+. esttab ex6_8 using "tabela6_8.rtf", replace
+>  ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(output written to tabela6_8.rtf)
+
+. 
+. eststo ex6_81: reg lsalary sales mktval ceo
+> ten
+
+      Source |       SS           df       MS
+>       Number of obs   =       177
+-------------+-------------------------------
+> ---   F(3, 173)       =     14.91
+       Model |  13.2841655         3  4.42805
+> 518   Prob > F        =    0.0000
+    Residual |  51.3620548       173   .29689
+> 049   R-squared       =    0.2055
+-------------+-------------------------------
+> ---   Adj R-squared   =    0.1917
+       Total |  64.6462203       176   .36730
+> 807   Root MSE        =    .54488
+
+---------------------------------------------
+> ---------------------------------
+     lsalary |      Coef.   Std. Err.      t 
+>    P>|t|                                   
+>              [95% Con                      
+>                      f. Interval]
+-------------+-------------------------------
+> ---------------------------------
+       sales |   .0000266   .0000103     2.57
+>    0.011                                   
+>              6.22e-06                      
+>                          .0000471
+      mktval |   .0000188   9.75e-06     1.93
+>    0.055                                   
+>             -4.12e-07                      
+>                          .0000381
+      ceoten |   .0111472   .0057793     1.93
+>    0.055                                   
+>             -.0002599                      
+>                          .0225543
+       _cons |   6.332327   .0671097    94.36
+>    0.000                                   
+>              6.199868                      
+>                          6.464787
+---------------------------------------------
+> ---------------------------------
+
+. 
+. predict lsalary_hat, xb
+
+. predict se_salary, stdf
+
+. 
+. gen lower_log = lsalary_hat - invttail(e(df
+> _r),0.025)*se_salary
+
+. gen upper_log = lsalary_hat + invttail(e(df
+> _r),0.025)*se_salary
+
+. 
+. gen lower_y = exp(lower_log)
+
+. gen upper_y = exp(upper_log)
+
+. display lower_log
+5.8230052
+
+. display upper_log
+8.0907764
+
+. 
+. display lower_y
+337.98624
+
+. display upper_y
+3264.2212
+
+. /*
+>         (1)
+>                 salary
+> sales   0.0190*
+>                 (0.0101)
+>         
+> mktval  0.0234**
+>                 (0.00948)
+>         
+> ceoten  12.70**
+>                 (5.618)
+>         
+> _cons   613.4***
+>                 (65.24)
+> Obs.    177
+> R2              0.201
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> t(0.025)= 1.96
+> se(ê) = 
+> Aqui queremos um intervalo de predição para
+>  95%(em nível)
+> valor sup = log(sal)_chapeu + 1.96*se(ê) = 
+> 3264.2212
+> valor inf = log(sal)_chapeu - 1.96*se(ê) = 
+> 337.98624
+> há uma diferença do valor desse código pro 
+> valor do Wooldridge pelo 
+> exemplo numérico que ele usa
+> 
+> */
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Facul
+> dade\UFBA\PIBIC\Stata\ExemplosWooldridge\Ca
+> p6\ex6_78.log
+  log type:  text
+ closed on:  21 Oct 2026, 18:26:41
+---------------------------------------------

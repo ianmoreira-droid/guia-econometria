@@ -1,0 +1,172 @@
+---------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Facul
+> dade\UFBA\PIBIC\Stata\ExemplosWooldridge\Ca
+> p6\ex6_2.log
+  log type:  text
+ opened on:  20 Oct 2026, 19:49:19
+
+. 
+. *Importando dados
+. import excel "hprice2.xls", firstrow clear
+
+. 
+. label variable price        " median housin
+> g price, $"
+
+. label variable crime        " crimes commit
+> ted per capita"
+
+. label variable nox          " nitrous oxide
+> , parts per 100 mill."
+
+. label variable rooms        " avg number of
+>  rooms per house"
+
+. label variable dist         " weighted dist
+> . to 5 employ centers"
+
+. label variable radial       " accessibiliy 
+> index to radial hghwys"
+
+. label variable proptax      " property tax 
+> per $1000"
+
+. label variable stratio      " average stude
+> nt-teacher ratio"
+
+. label variable lowstat      " % of people '
+> lower status'"
+
+. label variable lprice       " log(price)"
+
+. label variable lnox         " log(nox)"
+
+. label variable lproptax     " log(proptax)"
+
+. label variable ldist        " log(dist)"
+
+. 
+. summarize
+
+    Variable |        Obs        Mean    Std.
+>  Dev.       Min        Max
+-------------+-------------------------------
+> --------------------------
+       price |        506    22511.51    9208
+> .856       5000      50001
+       crime |        506    3.611536    8.59
+> 0247       .006     88.976
+         nox |        506    5.549783    1.15
+> 8395       3.85       8.71
+       rooms |        506    6.284051    .702
+> 5938       3.56       8.78
+        dist |        506    3.795751    2.10
+> 6137       1.13      12.13
+-------------+-------------------------------
+> --------------------------
+      radial |        506    9.549407    8.70
+> 7259          1         24
+     proptax |        506    40.82372    16.8
+> 5371       18.7       71.1
+     stratio |        506    18.45929     2.1
+> 6582       12.6         22
+     lowstat |        506    12.70148    7.23
+> 8066       1.73      39.07
+      lprice |        506    9.941057    .409
+> 2549   8.517193    10.8198
+-------------+-------------------------------
+> --------------------------
+        lnox |        506    1.693091    .201
+> 4101   1.348073   2.164472
+    lproptax |        506    5.931405    .396
+> 3666   5.231109   6.566672
+       ldist |        506    1.188233     .53
+> 9501   .1222176   2.495682
+
+. 
+. 
+. 
+. *Regressão - eststo salva resultados
+. eststo ex6_2: reg lprice lnox ldist rooms c
+> .rooms#c.rooms stratio
+
+      Source |       SS           df       MS
+>       Number of obs   =       506
+-------------+-------------------------------
+> ---   F(5, 500)       =    151.77
+       Model |  50.9872351         5   10.197
+> 447   Prob > F        =    0.0000
+    Residual |  33.5950137       500  .067190
+> 027   R-squared       =    0.6028
+-------------+-------------------------------
+> ---   Adj R-squared   =    0.5988
+       Total |  84.5822488       505  .167489
+> 602   Root MSE        =    .25921
+
+---------------------------------------------
+> ---------------------------------
+      lprice |      Coef.   Std. Err.      t 
+>    P>|t|                                   
+>              [95% Con                      
+>                      f. Interval]
+-------------+-------------------------------
+> ---------------------------------
+        lnox |  -.9016829    .114687    -7.86
+>    0.000                                   
+>             -1.127011                      
+>                          -.676355
+       ldist |   -.086782   .0432808    -2.01
+>    0.045                                   
+>             -.1718165                      
+>                         -.0017474
+       rooms |  -.5451123   .1654542    -3.29
+>    0.001                                   
+>             -.8701835                      
+>                         -.2200411
+             |
+     c.rooms#|
+     c.rooms |   .0622611    .012805     4.86
+>    0.000                                   
+>              .0371029                      
+>                          .0874194
+             |
+     stratio |  -.0475902   .0058542    -8.13
+>    0.000                                   
+>             -.0590921                      
+>                         -.0360884
+       _cons |   13.38548   .5664734    23.63
+>    0.000                                   
+>              12.27252                      
+>                          14.49844
+---------------------------------------------
+> ---------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD1e
+> 60_000000.tmp"
+
+. gen double lnprice2 =  _b[_cons]  + _b[room
+> s]*rooms + _b[c.rooms#c.rooms]*rooms^2 
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD1e
+> 60_000000.tmp"
+
+. twoway (line lnprice2 rooms), ///
+>     title("Figure 6.1 log(price) as a quadr
+> atic function of rooms") ///
+>     ylabel(6(3)18) xlabel(4.4) 
+
+. graph export "Exemplo6_2.png", replace
+(note: file Exemplo6_2.png not found)
+(file Exemplo6_2.png written in PNG format)
+
+. 
+end of do-file
+
+. exit, clear

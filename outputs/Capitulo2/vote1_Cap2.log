@@ -1,0 +1,133 @@
+----------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap2\vote1_Cap2.log
+  log type:  text
+ opened on:  30 Oct 2026, 15:08:23
+
+. 
+. *Importando dados
+. import excel "vote1.xls", firstrow cle
+> ar
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean   
+>  Std. Dev.       Min        Max
+-------------+--------------------------
+> -------------------------------
+       state |          0
+    district |        173     8.83815   
+>  8.768823          1         42
+      democA |        173    .5549133   
+>   .498418          0          1
+       voteA |        173    50.50289   
+>  16.78476         16         84
+     expendA |        173    310.6111   
+>  280.9857         .3    1470.67
+-------------+--------------------------
+> -------------------------------
+     expendB |        173    305.0885   
+>   306.278        .93    1548.19
+    prtystrA |        173    49.75723   
+>   9.98365         22         71
+      shareA |        173    5.025556   
+>  1.601602  -1.197328   7.293476
+    lexpendA |        173    4.944369   
+>  1.571143  -.0725707   7.344844
+    lexpendB |        173    51.07618   
+>  33.48389        .09       99.5
+
+. 
+. *Regressão - eststo salva resultados
+. eststo ex2_5: reg voteA shareA 
+
+      Source |       SS           df    
+>    MS      Number of obs   =       173
+-------------+--------------------------
+> --------   F(1, 171)       =    107.24
+       Model |  18676.2633         1  18
+> 676.2633   Prob > F        =    0.0000
+    Residual |  29780.9852       171  17
+> 4.157808   R-squared       =    0.3854
+-------------+--------------------------
+> --------   Adj R-squared   =    0.3818
+       Total |  48457.2486       172  28
+> 1.728189   Root MSE        =    13.197
+
+----------------------------------------
+> --------------------------------------
+       voteA |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+      shareA |   6.506182   .6282792    
+> 10.36                                 
+>         0.000                         
+>                      5.266            
+>                               7.746364
+       _cons |   17.80571   3.313035    
+>  5.37                                 
+>         0.000                         
+>                   11.26599            
+>                               24.34542
+----------------------------------------
+> --------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDa8c_000000.tmp"
+
+. esttab ex2_5 using "tab2_5.rtf", repla
+> ce ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab2_5.rtf not found)
+(output written to tab2_5.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDa8c_000000.tmp"
+
+. predict voteA_pred, xb
+
+. 
+. twoway (scatter voteA_pred shareA), yt
+> itle(Voto Predito) xtitle(Porcentagem 
+> dos gastos candA) title(Regressao Line
+> ar - Exemplo 2.5) 
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDa8c_000000.tmp"
+
+. display e(r2)
+.38541733
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDa8c_000000.tmp"
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap2\vote1_Cap2.log
+  log type:  text
+ closed on:  30 Oct 2026, 15:09:54
+----------------------------------------

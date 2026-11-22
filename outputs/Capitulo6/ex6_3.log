@@ -1,0 +1,94 @@
+-----------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\PIBIC\Stata\ExemplosW
+> ooldridge\Cap6\ex6_3.log
+  log type:  text
+ opened on:   9 May 2026, 12:06:48
+
+. 
+. *Importando dados
+. import excel "attend.xls", firstrow clear
+
+. 
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      attend |        680    26.14706    5.455037          2         32
+     termgpa |        680       2.601     .736586          0          4
+      priGPA |        680    2.586775    .5447141       .857       3.93
+         ACT |        680    22.51029    3.490768         13         32
+       final |        680    25.89118    4.709835         10         39
+-------------+---------------------------------------------------------
+     atndrte |        680    81.70956    17.04699       6.25        100
+       hwrte |          0
+       frosh |        680    .2323529    .4226438          0          1
+        soph |        680    .5764706    .4944814          0          1
+     skipped |        680    5.852941    5.455037          0         30
+-------------+---------------------------------------------------------
+     stndfnl |        680    .0296589     .989461  -3.308824   2.783613
+
+. 
+. *Regressão - eststo salva resultados
+. eststo ex6_3: reg stndfnl atndrte priGPA ACT c.priGPA#c.priGPA ///
+>     c.ACT#c.ACT c.priGPA#c.atndrte
+
+      Source |       SS           df       MS      Number of obs   =   
+>     680
+-------------+----------------------------------   F(6, 673)       =   
+>   33.25
+       Model |  152.000997         6  25.3334996   Prob > F        =   
+>  0.0000
+    Residual |  512.762436       673  .761905552   R-squared       =   
+>  0.2287
+-------------+----------------------------------   Adj R-squared   =   
+>  0.2218
+       Total |  664.763434       679  .979033039   Root MSE        =   
+>  .87287
+
+-----------------------------------------------------------------------
+> -------
+     stndfnl |      Coef.   Std. Err.      t    P>|t|     [95% Conf. In
+> terval]
+-------------+---------------------------------------------------------
+> -------
+     atndrte |  -.0067129   .0102321    -0.66   0.512    -.0268036    .
+> 0133777
+      priGPA |   -1.62854   .4810025    -3.39   0.001    -2.572986   -.
+> 6840935
+         ACT |  -.1280394    .098492    -1.30   0.194    -.3214279    .
+> 0653492
+             |
+    c.priGPA#|
+    c.priGPA |   .2959045   .1010495     2.93   0.004     .0974944    .
+> 4943146
+             |
+ c.ACT#c.ACT |   .0045334   .0021764     2.08   0.038       .00026    .
+> 0088068
+             |
+    c.priGPA#|
+   c.atndrte |   .0055859   .0043174     1.29   0.196    -.0028913    .
+> 0140631
+             |
+       _cons |   2.050293   1.360319     1.51   0.132    -.6206864    4
+> .721272
+-----------------------------------------------------------------------
+> -------
+
+. 
+. esttab ex6_3 using "tabela6_3.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tabela6_3.rtf not found)
+(output written to tabela6_3.rtf)
+
+. 
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\PIBIC\Stata\Exemp
+> losWooldridge\Cap6\attend.dta"
+file C:\Users\ianpm\Desktop\Ian\Faculdade\PIBIC\Stata\Exemplos
+> Wooldridge\Cap6\attend.dta saved
+
+. exit, clear

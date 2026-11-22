@@ -1,0 +1,408 @@
+----------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap4\bwght4_9.log
+  log type:  text
+ opened on:   8 Nov 2026, 18:16:00
+
+. 
+. *Importando dados
+. import excel "bwght.xls", clear
+
+. type BWGHT.DES
+BWGHT.DES
+
+faminc    cigtax    cigprice  bwght     
+> fatheduc  motheduc  parity    male    
+>  
+white     cigs      lbwght    bwghtlbs  
+> packs     lfaminc   
+
+  Obs:  1388
+
+  1. faminc                   1988 famil
+> y income, $1000s
+  2. cigtax                   cig. tax i
+> n home state, 1988
+  3. cigprice                 cig. price
+>  in home state, 1988
+  4. bwght                    birth weig
+> ht, ounces
+  5. fatheduc                 father's y
+> rs of educ
+  6. motheduc                 mother's y
+> rs of educ
+  7. parity                   birth orde
+> r of child
+  8. male                     =1 if male
+>  child
+  9. white                    =1 if whit
+> e
+ 10. cigs                     cigs smked
+>  per day while preg
+ 11. lbwght                   log of bwg
+> ht
+ 12. bwghtlbs                 birth weig
+> ht, pounds
+ 13. packs                    packs smke
+> d per day while preg
+ 14. lfaminc                  log(faminc
+> )
+
+. 
+. rename (A-N) (faminc cigtax cigprice b
+> wght fatheduc motheduc parity male whi
+> te cigs lbwght bwghtlbs packs lfaminc)
+
+. 
+. label variable faminc     "1988 family
+>  income, $1000s"
+
+. label variable cigtax     "cig. tax in
+>  home state, 1988"
+
+. label variable cigprice   "cig. price 
+> in home state, 1988"
+
+. label variable bwght      "birth weigh
+> t, ounces"
+
+. label variable fatheduc   "father's yr
+> s of educ"
+
+. label variable motheduc   "mother's yr
+> s of educ"
+
+. label variable parity     "birth order
+>  of child"
+
+. label variable male       "=1 if male 
+> child"
+
+. label variable white      "=1 if white
+> "
+
+. label variable cigs       "cigs smked 
+> per day while preg"
+
+. label variable lbwght     "log of bwgh
+> t"
+
+. label variable bwghtlbs   "birth weigh
+> t, pounds"
+
+. label variable packs      "packs smked
+>  per day while preg"
+
+. label variable lfaminc    "log(faminc)
+> "
+
+. 
+. destring fatheduc, replace
+fatheduc: all characters numeric; replac
+> ed as byte
+(196 missing values generated)
+
+. destring motheduc, replace
+motheduc: all characters numeric; replac
+> ed as byte
+(1 missing value generated)
+
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean   
+>  Std. Dev.       Min        Max
+-------------+--------------------------
+> -------------------------------
+      faminc |      1,388    29.02666   
+>  18.73928         .5         65
+      cigtax |      1,388    19.55295   
+>  7.795598          2         38
+    cigprice |      1,388     130.559   
+>  10.24448      103.8      152.5
+       bwght |      1,388    118.6996   
+>  20.35396         23        271
+    fatheduc |      1,192    13.18624   
+>  2.745985          1         18
+-------------+--------------------------
+> -------------------------------
+    motheduc |      1,387    12.93583   
+>  2.376728          2         18
+      parity |      1,388    1.632565   
+>  .8940273          1          6
+        male |      1,388    .5208934   
+>  .4997433          0          1
+       white |      1,388    .7845821   
+>  .4112601          0          1
+        cigs |      1,388    2.087176   
+>  5.972688          0         50
+-------------+--------------------------
+> -------------------------------
+      lbwght |      1,388    4.760031   
+>  .1906622   3.135494   5.602119
+    bwghtlbs |      1,388    7.418723   
+>  1.272123     1.4375    16.9375
+       packs |      1,388    .1043588   
+>  .2986344          0        2.5
+     lfaminc |      1,388    3.071271   
+>  .9180645  -.6931472   4.174387
+
+. 
+. *Regressão - eststo salva resultados(u
+> nrestricted)
+. eststo ex4_9: reg bwght cigs parity fa
+> minc motheduc fatheduc
+
+      Source |       SS           df    
+>    MS      Number of obs   =     1,191
+-------------+--------------------------
+> --------   F(5, 1185)      =      9.55
+       Model |  18705.5567         5  37
+> 41.11135   Prob > F        =    0.0000
+    Residual |  464041.135     1,185  39
+> 1.595895   R-squared       =    0.0387
+-------------+--------------------------
+> --------   Adj R-squared   =    0.0347
+       Total |  482746.692     1,190  40
+> 5.669489   Root MSE        =    19.789
+
+----------------------------------------
+> --------------------------------------
+       bwght |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+        cigs |  -.5959362   .1103479    
+> -5.40                                 
+>         0.000                         
+>                  -.8124352            
+>                              -.3794373
+      parity |   1.787603   .6594055    
+>  2.71                                 
+>         0.007                         
+>                   .4938709            
+>                               3.081336
+      faminc |   .0560414   .0365616    
+>  1.53                                 
+>         0.126                         
+>                  -.0156913            
+>                               .1277742
+    motheduc |  -.3704503   .3198551    
+> -1.16                                 
+>         0.247                         
+>                  -.9979957            
+>                               .2570951
+    fatheduc |   .4723944   .2826433    
+>  1.67                                 
+>         0.095                         
+>                  -.0821426            
+>                               1.026931
+       _cons |   114.5243   3.728453    
+> 30.72                                 
+>         0.000                         
+>                   107.2092            
+>                               121.8394
+----------------------------------------
+> --------------------------------------
+
+. 
+. 
+. ***** TABELA COM O RESULTADO  - SAlVA 
+> O ARQUIVO NO SEU DIRETORIO
+. esttab ex4_9 using "tab4_9_ur.rtf", re
+> place ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab4_9_ur.rtf not found)
+(output written to tab4_9_ur.rtf)
+
+.         
+. * Feito direto
+. test motheduc fatheduc
+
+ ( 1)  motheduc = 0
+ ( 2)  fatheduc = 0
+
+       F(  2,  1185) =    1.44
+            Prob > F =    0.2380
+
+. 
+. * Feito a mão
+. scalar R2_ur = e(r2)
+
+. scalar n = e(N)
+
+. /*
+>              bwght
+> cigs       -0.596***
+>                (0.110)
+>         
+> parity      1.788***
+>                (0.659)
+>         
+> faminc      0.0560
+>                (0.0366)
+>         
+> motheduc        -0.370
+>                 (0.320)
+>         
+> fatheduc        0.472*
+>                 (0.283)
+>         
+> _cons      114.5***
+>                (3.728)
+> Obs.       1191
+> R2ur       0.0387
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> */
+. 
+. *Regressão Restrita(sem motherduc e fa
+> thereduc)
+. eststo ex4_91: reg bwght cigs parity f
+> aminc if(motheduc != . & fatheduc != .
+> )
+
+      Source |       SS           df    
+>    MS      Number of obs   =     1,191
+-------------+--------------------------
+> --------   F(3, 1187)      =     14.95
+       Model |  17579.8997         3  58
+> 59.96658   Prob > F        =    0.0000
+    Residual |  465166.792     1,187  39
+> 1.884408   R-squared       =    0.0364
+-------------+--------------------------
+> --------   Adj R-squared   =    0.0340
+       Total |  482746.692     1,190  40
+> 5.669489   Root MSE        =    19.796
+
+----------------------------------------
+> --------------------------------------
+       bwght |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+        cigs |  -.5978519   .1087701    
+> -5.50                                 
+>         0.000                         
+>                  -.8112549            
+>                              -.3844489
+      parity |   1.832274   .6575402    
+>  2.79                                 
+>         0.005                         
+>                   .5422035            
+>                               3.122345
+      faminc |   .0670618   .0323938    
+>  2.07                                 
+>         0.039                         
+>                   .0035063            
+>                               .1306173
+       _cons |   115.4699   1.655898    
+> 69.73                                 
+>         0.000                         
+>                   112.2211            
+>                               118.7187
+----------------------------------------
+> --------------------------------------
+
+. 
+. 
+. ***** TABELA COM O RESULTADO  - SAlVA 
+> O ARQUIVO NO SEU DIRETORIO
+. esttab ex4_91 using "tab4_9_1r.rtf", r
+> eplace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab4_9_1r.rtf not found)
+(output written to tab4_9_1r.rtf)
+
+. 
+. scalar R2_r = e(r2)
+
+. /*
+> Resultado da regressão restrita
+>                 bwght
+> cigs    -0.598***
+>                 (0.109)
+>         
+> parity  1.832***
+>                 (0.658)
+>         
+> faminc  0.0671**
+>                 (0.0324)
+>         
+> _cons   115.5***
+>                 (1.656)
+> Obs.    1191
+> R2      0.0364
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> */
+. * Continuando o feito a mâo
+. * Parâmetros
+. scalar q = 2
+
+. scalar k = 5
+
+. 
+. * Numerador
+. scalar numerador = (R2_ur - R2_r)/q
+
+. 
+. * Denominador
+. scalar denominador = (1 - R2_ur)/(n - 
+> k - 1)
+
+. 
+. * Estatística F
+. scalar F_manual = numerador/denominado
+> r
+
+. 
+. display "Numerador: " numerador
+Numerador: .00116589
+
+. display "Denominador: " denominador
+Denominador: .00081118
+
+. display "Estatistica F: " F_manual
+Estatistica F: 1.4372686
+
+. /*
+> Teste F, faz excluindo motheduc e fath
+> educ
+> H_0: Beta_4 = Beta_5 = 0
+> df = n - k - 1 = 1191 - 5 - 1 = 1185
+> valor crítico a 5% c = 3
+> 
+> F = [(R^2ur - R^2r)/q]/[1-R^2ur)/df]
+> q = 2
+> calculando o numerador 
+> (0.0387 - 0.0364)/2 = 0.00115
+> calculando o denominador
+> (1 - 0.0387) / 1185 = 0.000811223
+> F = numerador / denominador = 1.42
+> Logo, falhamos em rejeitar a hipótese 
+> nula
+> */
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap4\bwght4_9.log
+  log type:  text
+ closed on:   8 Nov 2026, 18:16:01
+----------------------------------------

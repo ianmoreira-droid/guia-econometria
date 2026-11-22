@@ -1,0 +1,147 @@
+----------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap4\k401k4_4.log
+  log type:  text
+ opened on:   7 Nov 2026, 12:26:36
+
+. 
+. *Importando dados
+. import excel "401k.xls", firstrow clea
+> r
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean   
+>  Std. Dev.       Min        Max
+-------------+--------------------------
+> -------------------------------
+       prate |      1,534    87.36291   
+>  16.71654          3        100
+       mrate |      1,534    .7315124   
+>  .7795394        .01       4.91
+     totpart |      1,534    1354.231   
+>  4629.265         50      58811
+     totelig |      1,534    1628.535   
+>  5370.719         51      70429
+         age |      1,534    13.18123   
+>  9.171114          4         51
+-------------+--------------------------
+> -------------------------------
+      totemp |      1,534    3567.321   
+>  11199.88         58     140000
+        sole |      1,534    .4876141   
+>  .5000096          0          1
+     ltotemp |      1,534    6.686034   
+>  1.453375   4.060443   11.88025
+
+. 
+. *Regressão 1 - eststo salva resultados
+. eststo ex4_6: reg prate mrate age tote
+> mp
+
+      Source |       SS           df    
+>    MS      Number of obs   =     1,534
+-------------+--------------------------
+> --------   F(3, 1530)      =     56.41
+       Model |  42666.5735         3  14
+> 222.1912   Prob > F        =    0.0000
+    Residual |  385718.966     1,530  25
+> 2.103899   R-squared       =    0.0996
+-------------+--------------------------
+> --------   Adj R-squared   =    0.0978
+       Total |  428385.539     1,533  27
+> 9.442622   Root MSE        =    15.878
+
+----------------------------------------
+> --------------------------------------
+       prate |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+       mrate |   5.441433   .5244086    
+> 10.38                                 
+>         0.000                         
+>                   4.412797            
+>                               6.470068
+         age |   .2694073   .0451486    
+>  5.97                                 
+>         0.000                         
+>                   .1808477            
+>                               .3579669
+      totemp |  -.0001298   .0000367    
+> -3.53                                 
+>         0.000                         
+>                  -.0002018            
+>                              -.0000578
+       _cons |   80.29429   .7776952   1
+> 03.25                                 
+>         0.000                         
+>                   78.76882            
+>                               81.81975
+----------------------------------------
+> --------------------------------------
+
+. 
+. esttab ex4_6 using "tab4_6.rtf", repla
+> ce ///
+>     se star(* 0.10 ** 0.05 *** 0.01) /
+> //
+>     stats(N r2, labels("Obs." "R2"))
+(output written to tab4_6.rtf)
+
+. 
+. display e(r2)
+.09959854
+
+. * Teste t e seu p-valor
+. di _b[totemp]/_se[totemp]
+-3.5345032
+
+. display 2*ttail(e(df_r), abs(_b[totemp
+> ]/_se[totemp]))
+.0004207
+
+. /*
+>                 prate
+> mrate    5.441***
+>             (0.524)
+>         
+> age         0.269***
+>             (0.0451)
+>         
+> totemp  -0.000130***
+>             (0.0000367)
+>         
+> _cons   80.29***
+>            (0.778)
+> 
+> Obs.    1534
+> R2          0.0996
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> df = n - k - 1 = 1534 - 3 - 1 = 1530
+> 
+> estatística t para totemp
+> t = -0.000130/0.0000367 = -3.54
+> no teste bicaudal, esse valor em módul
+> o supera qualquer valor crítico 
+> mesmo os mais baixos
+> 
+> */
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap4\k401k4_4.log
+  log type:  text
+ closed on:   7 Nov 2026, 12:26:37
+----------------------------------------

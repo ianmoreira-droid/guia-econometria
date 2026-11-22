@@ -1,0 +1,299 @@
+----------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap2\wage1_Cap2.log
+  log type:  text
+ opened on:  29 Oct 2026, 20:04:21
+
+. 
+. *Importando dados
+. import excel "wage1.xls", firstrow cle
+> ar
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean   
+>  Std. Dev.       Min        Max
+-------------+--------------------------
+> -------------------------------
+        wage |        526    5.896103   
+>  3.693086        .53      24.98
+        educ |        526    12.56274   
+>  2.769022          0         18
+       exper |        526    17.01711   
+>  13.57216          1         51
+      tenure |        526    5.104563   
+>  7.224462          0         44
+    nonwhite |        526    .1026616   
+>  .3038053          0          1
+-------------+--------------------------
+> -------------------------------
+      female |        526    .4790875   
+>   .500038          0          1
+     married |        526     .608365   
+>  .4885804          0          1
+      numdep |        526    1.043726   
+>  1.261891          0          6
+        smsa |        526    .7224335   
+>  .4482246          0          1
+    northcen |        526    .2509506   
+>  .4339728          0          1
+-------------+--------------------------
+> -------------------------------
+       south |        526    .3555133   
+>  .4791242          0          1
+        west |        526    .1692015   
+>  .3752867          0          1
+    construc |        526    .0456274   
+>  .2088743          0          1
+     ndurman |        526    .1140684   
+>   .318197          0          1
+    trcommpu |        526    .0437262   
+>    .20468          0          1
+-------------+--------------------------
+> -------------------------------
+       trade |        526    .2870722   
+>  .4528262          0          1
+    services |        526    .1007605   
+>  .3012978          0          1
+    profserv |        526    .2585551   
+>  .4382574          0          1
+     profocc |        526    .3669202   
+>  .4824233          0          1
+     clerocc |        526    .1673004   
+>  .3735991          0          1
+-------------+--------------------------
+> -------------------------------
+     servocc |        526    .1406844   
+>  .3480267          0          1
+       lwage |        526    1.623268   
+>  .5315382  -.6348783   3.218076
+     expersq |        526    473.4354   
+>  616.0448          1       2601
+     tenursq |        526    78.15019   
+>  199.4347          0       1936
+
+. 
+. *Regressão 2.4
+. eststo ex2_4: reg wage educ 
+
+      Source |       SS           df    
+>    MS      Number of obs   =       526
+-------------+--------------------------
+> --------   F(1, 524)       =    103.36
+       Model |  1179.73205         1  11
+> 79.73205   Prob > F        =    0.0000
+    Residual |  5980.68226       524  11
+> .4135158   R-squared       =    0.1648
+-------------+--------------------------
+> --------   Adj R-squared   =    0.1632
+       Total |  7160.41431       525  13
+> .6388844   Root MSE        =    3.3784
+
+----------------------------------------
+> --------------------------------------
+        wage |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+        educ |   .5413593    .053248    
+> 10.17                                 
+>         0.000                         
+>                   .4367534            
+>                               .6459651
+       _cons |  -.9048517   .6849678    
+> -1.32                                 
+>         0.187                         
+>                  -2.250472            
+>                               .4407687
+----------------------------------------
+> --------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDd4c_000000.tmp"
+
+. twoway (scatter wage educ, mcolor(dark
+> green)) ///
+>        (lfit wage educ, lcolor(red)), 
+> ///
+>     title(Salario vs Anos de Educacao)
+>  ///
+>     xtitle(Educacao (anos)) ///
+>     ytitle(Salario)
+(note:  named style darkgreen not
+    found in class color, default
+    attributes used)
+(note:  named style darkgreen not
+    found in class color, default
+    attributes used)
+
+. 
+. graph export "wage1-1.png", replace
+(note: file wage1-1.png not found)
+(file wage1-1.png written in PNG format)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDd4c_000000.tmp"
+
+. graph export "wage1-1.png", replace
+(file wage1-1.png written in PNG format)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDd4c_000000.tmp"
+
+. * 2.7
+. local media = mean(educ)
+unknown function mean()
+r(133);
+
+end of do-file
+
+r(133);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDd4c_000000.tmp"
+
+. * 2.7
+. summarize educ
+
+    Variable |        Obs        Mean   
+>  Std. Dev.       Min        Max
+-------------+--------------------------
+> -------------------------------
+        educ |        526    12.56274   
+>  2.769022          0         18
+
+. local media = r(mean)
+
+. display _b[_cons] + _b[educ]*`media'
+5.8961027
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDd4c_000000.tmp"
+
+. eststo ex2_10: reg lwage educ
+
+      Source |       SS           df    
+>    MS      Number of obs   =       526
+-------------+--------------------------
+> --------   F(1, 524)       =    119.58
+       Model |  27.5606296         1  27
+> .5606296   Prob > F        =    0.0000
+    Residual |  120.769133       524  .2
+> 30475445   R-squared       =    0.1858
+-------------+--------------------------
+> --------   Adj R-squared   =    0.1843
+       Total |  148.329763       525  .2
+> 82532881   Root MSE        =    .48008
+
+----------------------------------------
+> --------------------------------------
+       lwage |      Coef.   Std. Err.   
+>    t                                  
+>         P>|t|                         
+>                   [95% Con            
+>                           f. Interval]
+-------------+--------------------------
+> --------------------------------------
+        educ |   .0827444   .0075667    
+> 10.94                                 
+>         0.000                         
+>                   .0678796            
+>                               .0976092
+       _cons |   .5837726   .0973358    
+>  6.00                                 
+>         0.000                         
+>                   .3925562            
+>                                .774989
+----------------------------------------
+> --------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDd4c_000000.tmp"
+
+. twoway (scatter lwage educ, mcolor(dar
+> kgreen)) ///
+>        (lfit wage educ, lcolor(red)), 
+> ///
+>     title(Log(Salario) vs Anos de Educ
+> acao) ///
+>     xtitle(Educacao (anos)) ///
+>     ytitle(Log(Salario) Predito)
+(note:  named style darkgreen not
+    found in class color, default
+    attributes used)
+(note:  named style darkgreen not
+    found in class color, default
+    attributes used)
+
+. 
+. graph export "wage1-2.png", replace
+(note: file wage1-2.png not found)
+(file wage1-2.png written in PNG format)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDd4c_000000.tmp"
+
+. twoway (scatter lwage educ, mcolor(dar
+> kgreen)) ///
+>        (lfit lwage educ, lcolor(red)),
+>  ///
+>     title(Salario vs Anos de educacao)
+>  ///
+>     xtitle(Educacao (anos)) ///
+>     ytitle(Logsalario)
+(note:  named style darkgreen not
+    found in class color, default
+    attributes used)
+(note:  named style darkgreen not
+    found in class color, default
+    attributes used)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDd4c_000000.tmp"
+
+. graph export "wage1-2.png", replace
+(note: file wage1-2.png not found)
+(file wage1-2.png written in PNG format)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\
+> STDd4c_000000.tmp"
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\
+> Faculdade\UFBA\PIBIC\Stata\ExemplosWoo
+> ldridge\Cap2\wage1_Cap2.log
+  log type:  text
+ closed on:  29 Oct 2026, 20:13:50
+----------------------------------------

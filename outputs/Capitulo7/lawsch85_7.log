@@ -1,0 +1,244 @@
+------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata
+> \ExemplosWooldridge\Cap7\lawsch85_7.log
+  log type:  text
+ opened on:  16 Jul 2026, 16:04:29
+
+. 
+. *Importando dados
+. import excel "lawsch85.xls", firstrow clear
+
+. 
+. *Sumário
+. destring lsalary llibvol lcost 
+must specify either generate or replace option
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2c5c_000000.tmp"
+
+. destring lsalary llibvol lcost, replace
+lsalary: all characters numeric; replaced as double
+(8 missing values generated)
+llibvol: all characters numeric; replaced as double
+(1 missing value generated)
+lcost: all characters numeric; replaced as double
+(6 missing values generated)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2c5c_000000.tmp"
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min      
+>   Max
+-------------+----------------------------------------------------
+> -----
+        rank |        156       83.75    50.06417          1      
+>   175
+      salary |          0
+        cost |          0
+        LSAT |          0
+         GPA |          0
+-------------+----------------------------------------------------
+> -----
+      libvol |          0
+     faculty |          0
+         age |          0
+      clsize |          0
+       north |        156    .2051282    .4050957          0      
+>     1
+-------------+----------------------------------------------------
+> -----
+       south |        156    .2435897    .4306304          0      
+>     1
+        east |        156    .3076923    .4630249          0      
+>     1
+        west |        156    .2435897    .4306304          0      
+>     1
+     lsalary |        148    10.52878    .2767207   10.12262   11.
+> 26862
+     studfac |          0
+-------------+----------------------------------------------------
+> -----
+       top10 |        156    .0641026    .2457244          0      
+>     1
+      r11_25 |        156    .1025641    .3043658          0      
+>     1
+      r26_40 |        156    .0833333    .2772755          0      
+>     1
+      r41_60 |        156    .1153846    .3205145          0      
+>     1
+     llibvol |        155    5.751981     .416548   4.820282    7.
+> 46451
+-------------+----------------------------------------------------
+> -----
+       lcost |        150    9.392434    .3689148   7.872074   9.9
+> 29058
+     r61_100 |        156    .2371795    .4267231          0      
+>     1
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2c5c_000000.tmp"
+
+. eststo ex7_8: reg lsalary top10 r11_25 r26_40 r41_60 r61_100 LSA
+> T GPA llibvol lcost    
+no observations
+r(2000);
+
+end of do-file
+
+r(2000);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2c5c_0
+> 00000.tmp"
+
+. destring lsalary llibvol lcost LSAT GPA, replac
+> e
+lsalary already numeric; no replace
+llibvol already numeric; no replace
+lcost already numeric; no replace
+LSAT: all characters numeric; replaced as int
+(6 missing values generated)
+GPA: all characters numeric; replaced as double
+(7 missing values generated)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2c5c_000000.tmp"
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min      
+>   Max
+-------------+----------------------------------------------------
+> -----
+        rank |        156       83.75    50.06417          1      
+>   175
+      salary |          0
+        cost |          0
+        LSAT |        150    158.2933    4.701202        140      
+>   171
+         GPA |        149    3.302752    .1997764       2.73      
+>  3.82
+-------------+----------------------------------------------------
+> -----
+      libvol |          0
+     faculty |          0
+         age |          0
+      clsize |          0
+       north |        156    .2051282    .4050957          0      
+>     1
+-------------+----------------------------------------------------
+> -----
+       south |        156    .2435897    .4306304          0      
+>     1
+        east |        156    .3076923    .4630249          0      
+>     1
+        west |        156    .2435897    .4306304          0      
+>     1
+     lsalary |        148    10.52878    .2767207   10.12262   11.
+> 26862
+     studfac |          0
+-------------+----------------------------------------------------
+> -----
+       top10 |        156    .0641026    .2457244          0      
+>     1
+      r11_25 |        156    .1025641    .3043658          0      
+>     1
+      r26_40 |        156    .0833333    .2772755          0      
+>     1
+      r41_60 |        156    .1153846    .3205145          0      
+>     1
+     llibvol |        155    5.751981     .416548   4.820282    7.
+> 46451
+-------------+----------------------------------------------------
+> -----
+       lcost |        150    9.392434    .3689148   7.872074   9.9
+> 29058
+     r61_100 |        156    .2371795    .4267231          0      
+>     1
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2c5c_000000.tmp"
+
+. eststo ex7_8: reg lsalary top10 r11_25 r26_40 r41_60 r61_100 LSA
+> T GPA llibvol lcost    
+
+      Source |       SS           df       MS      Number of obs  
+>  =       136
+-------------+----------------------------------   F(9, 126)      
+>  =    143.20
+       Model |  9.45225439         9  1.05025049   Prob > F       
+>  =    0.0000
+    Residual |  .924109085       126  .007334199   R-squared      
+>  =    0.9109
+-------------+----------------------------------   Adj R-squared  
+>  =    0.9046
+       Total |  10.3763635       135  .076861952   Root MSE       
+>  =    .08564
+
+------------------------------------------------------------------
+> ------------
+     lsalary |      Coef.   Std. Err.      t    P>|t|     [95% Con
+> f. Interval]
+-------------+----------------------------------------------------
+> ------------
+       top10 |   .6995647   .0534919    13.08   0.000     .5937058
+>     .8054236
+      r11_25 |   .5935445     .03944    15.05   0.000     .5154938
+>     .6715951
+      r26_40 |   .3750779   .0340812    11.01   0.000     .3076322
+>     .4425236
+      r41_60 |     .26282    .027962     9.40   0.000      .207484
+>      .318156
+     r61_100 |   .1315945   .0210418     6.25   0.000     .0899534
+>     .1732357
+        LSAT |   .0056908    .003063     1.86   0.066    -.0003708
+>     .0117524
+         GPA |   .0137274   .0741919     0.19   0.854    -.1330961
+>     .1605509
+     llibvol |   .0363615   .0260165     1.40   0.165    -.0151244
+>     .0878473
+       lcost |   .0008418    .025136     0.03   0.973    -.0489017
+>     .0505852
+       _cons |   9.165293    .411424    22.28   0.000     8.351097
+>     9.979489
+------------------------------------------------------------------
+> ------------
+
+. 
+. esttab ex7_8 using "tab7_8.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab7_8.rtf not found)
+(output written to tab7_8.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD2c5c_000000.tmp"
+
+. display 100*(exp(_b[top10])-1)
+101.28763
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Exem
+> plosWooldridge\Cap7\lawsch85_7_8.dta"
+file C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Exemplo
+> sWooldridge\Cap7\lawsch85_7_8.dta saved
+
+. exit, clear
