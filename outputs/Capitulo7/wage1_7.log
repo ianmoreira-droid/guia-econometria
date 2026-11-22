@@ -1,0 +1,710 @@
+----------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Sta
+> ta\ExemplosWooldridge\Cap7\wage1_7.log
+  log type:  text
+ opened on:  23 Jun 2026, 14:14:07
+
+. 
+. *Importando dados
+. import excel "wage1.xls", firstrow clear
+
+. 
+. *Sumário
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min    
+>     Max
+-------------+--------------------------------------------------
+> -------
+        wage |        526    5.896103    3.693086        .53    
+>   24.98
+        educ |        526    12.56274    2.769022          0    
+>      18
+       exper |        526    17.01711    13.57216          1    
+>      51
+      tenure |        526    5.104563    7.224462          0    
+>      44
+    nonwhite |        526    .1026616    .3038053          0    
+>       1
+-------------+--------------------------------------------------
+> -------
+      female |        526    .4790875     .500038          0    
+>       1
+     married |        526     .608365    .4885804          0    
+>       1
+      numdep |        526    1.043726    1.261891          0    
+>       6
+        smsa |        526    .7224335    .4482246          0    
+>       1
+    northcen |        526    .2509506    .4339728          0    
+>       1
+-------------+--------------------------------------------------
+> -------
+       south |        526    .3555133    .4791242          0    
+>       1
+        west |        526    .1692015    .3752867          0    
+>       1
+    construc |        526    .0456274    .2088743          0    
+>       1
+     ndurman |        526    .1140684     .318197          0    
+>       1
+    trcommpu |        526    .0437262      .20468          0    
+>       1
+-------------+--------------------------------------------------
+> -------
+       trade |        526    .2870722    .4528262          0    
+>       1
+    services |        526    .1007605    .3012978          0    
+>       1
+    profserv |        526    .2585551    .4382574          0    
+>       1
+     profocc |        526    .3669202    .4824233          0    
+>       1
+     clerocc |        526    .1673004    .3735991          0    
+>       1
+-------------+--------------------------------------------------
+> -------
+     servocc |        526    .1406844    .3480267          0    
+>       1
+       lwage |        526    1.623268    .5315382  -.6348783   3
+> .218076
+     expersq |        526    473.4354    616.0448          1    
+>    2601
+     tenursq |        526    78.15019    199.4347          0    
+>    1936
+
+. 
+. 
+. *Regressões 7.1
+. eststo ex7_11: reg wage female educ exper tenure 
+
+      Source |       SS           df       MS      Number of obs
+>    =       526
+-------------+----------------------------------   F(4, 521)    
+>    =     74.40
+       Model |   2603.1066         4   650.77665   Prob > F     
+>    =    0.0000
+    Residual |  4557.30771       521  8.74723169   R-squared    
+>    =    0.3635
+-------------+----------------------------------   Adj R-squared
+>    =    0.3587
+       Total |  7160.41431       525  13.6388844   Root MSE     
+>    =    2.9576
+
+----------------------------------------------------------------
+> --------------
+        wage |      Coef.   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+      female |  -1.810852   .2648252    -6.84   0.000    -2.3311
+> 09                                                            
+>      -1.290596
+        educ |   .5715048   .0493373    11.58   0.000     .47458
+> 03                                                            
+>       .6684293
+       exper |   .0253959   .0115694     2.20   0.029     .00266
+> 74                                                            
+>       .0481243
+      tenure |   .1410051   .0211617     6.66   0.000     .09943
+> 23                                                            
+>       .1825778
+       _cons |  -1.567939   .7245511    -2.16   0.031     -2.991
+> 34                                                            
+>       -.144538
+----------------------------------------------------------------
+> --------------
+
+. 
+. esttab ex7_11 using "tab7_11.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(output written to tab7_11.rtf)
+
+. 
+. /*
+>                         (1)
+>                         wage
+> female          -1.811***
+>                         (0.265)
+>         
+> educ            0.572***
+>                         (0.0493)
+>                 
+> exper           0.0254**
+>                         (0.0116)
+>         
+> tenure          0.141***
+>                         (0.0212)
+>         
+> _cons           -1.568**
+>                         (0.725)
+> Obs.            526
+> R2                      0.364
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> 
+> */
+. 
+. 
+. eststo ex7_12: reg wage female
+
+      Source |       SS           df       MS      Number of obs
+>    =       526
+-------------+----------------------------------   F(1, 524)    
+>    =     68.54
+       Model |  828.220463         1  828.220463   Prob > F     
+>    =    0.0000
+    Residual |  6332.19385       524  12.0843394   R-squared    
+>    =    0.1157
+-------------+----------------------------------   Adj R-squared
+>    =    0.1140
+       Total |  7160.41431       525  13.6388844   Root MSE     
+>    =    3.4763
+
+----------------------------------------------------------------
+> --------------
+        wage |      Coef.   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+      female |   -2.51183   .3034092    -8.28   0.000    -3.1078
+> 78                                                            
+>      -1.915782
+       _cons |   7.099489   .2100082    33.81   0.000     6.6869
+> 28                                                            
+>        7.51205
+----------------------------------------------------------------
+> --------------
+
+. 
+. esttab ex7_12 using "tab7_12.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(output written to tab7_12.rtf)
+
+. /*
+>                         (1)
+>                         wage
+> female          -2.512***
+>                         (0.303)
+>         
+> _cons           7.099***
+>                         (0.210)
+> Obs.            526
+> R2                      0.116
+> Standard errors in parentheses
+> * p < 0.10, ** p < 0.05, *** p < 0.01
+> 
+> Pelas estimações é possível notar que o salário da mulher 
+> é menor que o do homem, mesmo controlando, por experiência
+> anos de educação e anos na empresa
+> */
+. 
+. *Regressão 7.5
+. eststo ex7_5: reg lwage female educ exper expersq tenure tenur
+> sq
+
+      Source |       SS           df       MS      Number of obs
+>    =       526
+-------------+----------------------------------   F(6, 519)    
+>    =     68.18
+       Model |  65.3791009         6  10.8965168   Prob > F     
+>    =    0.0000
+    Residual |  82.9506618       519  .159827865   R-squared    
+>    =    0.4408
+-------------+----------------------------------   Adj R-squared
+>    =    0.4343
+       Total |  148.329763       525  .282532881   Root MSE     
+>    =    .39978
+
+----------------------------------------------------------------
+> --------------
+       lwage |      Coef.   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+      female |   -.296511   .0358055    -8.28   0.000    -.36685
+> 24                                                            
+>      -.2261696
+        educ |   .0801967   .0067573    11.87   0.000     .06692
+> 17                                                            
+>       .0934716
+       exper |   .0294324   .0049752     5.92   0.000     .01965
+> 84                                                            
+>       .0392063
+     expersq |  -.0005827   .0001073    -5.43   0.000    -.00079
+> 35                                                            
+>      -.0003719
+      tenure |   .0317139   .0068452     4.63   0.000     .01826
+> 63                                                            
+>       .0451616
+     tenursq |  -.0005852   .0002347    -2.49   0.013    -.00104
+> 63                                                            
+>      -.0001241
+       _cons |   .4166909   .0989279     4.21   0.000     .22234
+> 25                                                            
+>       .6110394
+----------------------------------------------------------------
+> --------------
+
+. 
+. esttab ex7_5 using "tab7_5.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(output written to tab7_5.rtf)
+
+. 
+. *Efeito em porcentagem de ser mulher
+. display 100*(exp(_b[female])-1)
+-25.659254
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.tmp"
+
+. * Homem casado
+. gen marrmale = (married==1 & female==0)
+
+. 
+. * Mulher casada
+. gen marrfem = (married==1 & female==1)
+
+. 
+. * Mulher solteira
+. gen singfem = (married==0 & female==1)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.tmp"
+
+. eststo ex7_6: reg lwage marrmale marrfem singfem educ exper ex
+> persq tenure tenursq
+
+      Source |       SS           df       MS      Number of obs
+>    =       526
+-------------+----------------------------------   F(8, 517)    
+>    =     55.25
+       Model |   68.361762         8  8.54522025   Prob > F     
+>    =    0.0000
+    Residual |  79.9680007       517  .154676984   R-squared    
+>    =    0.4609
+-------------+----------------------------------   Adj R-squared
+>    =    0.4525
+       Total |  148.329763       525  .282532881   Root MSE     
+>    =    .39329
+
+----------------------------------------------------------------
+> --------------
+       lwage |      Coef.   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+    marrmale |   .2126756   .0553572     3.84   0.000      .1039
+> 23                                                            
+>       .3214283
+     marrfem |  -.1982677   .0578355    -3.43   0.001    -.31188
+> 91                                                            
+>      -.0846462
+     singfem |  -.1103502   .0557421    -1.98   0.048     -.2198
+> 59                                                            
+>      -.0008414
+        educ |   .0789103   .0066945    11.79   0.000     .06575
+> 85                                                            
+>       .0920621
+       exper |   .0268006   .0052428     5.11   0.000     .01650
+> 07                                                            
+>       .0371005
+     expersq |  -.0005352   .0001104    -4.85   0.000    -.00075
+> 22                                                            
+>      -.0003183
+      tenure |   .0290875    .006762     4.30   0.000     .01580
+> 31                                                            
+>       .0423719
+     tenursq |  -.0005331   .0002312    -2.31   0.022    -.00098
+> 74                                                            
+>      -.0000789
+       _cons |    .321378    .100009     3.21   0.001     .12490
+> 41                                                            
+>        .517852
+----------------------------------------------------------------
+> --------------
+
+. 
+. esttab ex7_6 using "tab7_6.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2, labels("Obs." "R2"))
+(note: file tab7_6.rtf not found)
+(output written to tab7_6.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.tmp"
+
+. lincom singfem - marrfem
+
+ ( 1)  - marrfem + singfem = 0
+
+----------------------------------------------------------------
+> --------------
+       lwage |      Coef.   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+         (1) |   .0879174   .0523481     1.68   0.094    -.01492
+> 38                                                            
+>       .1907587
+----------------------------------------------------------------
+> --------------
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Ex
+> emplosWooldridge\Cap7\wage17_1e_5.dta", replace
+file C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Stata\Exemp
+> losWooldridge\Cap7\wage17_1e_5.dta saved
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.tmp"
+
+. eststo ex7_10: reg lwage female educ c.female#c.educ exper exp
+> ersq tenure tenursq
+
+      Source |       SS           df       MS      Number of obs
+>    =       526
+-------------+----------------------------------   F(7, 518)    
+>    =     58.37
+       Model |  65.4081534         7  9.34402191   Prob > F     
+>    =    0.0000
+    Residual |  82.9216094       518  .160080327   R-squared    
+>    =    0.4410
+-------------+----------------------------------   Adj R-squared
+>    =    0.4334
+       Total |  148.329763       525  .282532881   Root MSE     
+>    =     .4001
+
+----------------------------------------------------------------
+> --------------
+       lwage |      Coef.   Std. Err.      t    P>|t|     [95% C
+> on                                                            
+>   f. Interval]
+-------------+--------------------------------------------------
+> --------------
+      female |  -.2267887   .1675395    -1.35   0.176     -.5559
+> 29                                                            
+>       .1023516
+        educ |   .0823692   .0084699     9.72   0.000     .06572
+> 96                                                            
+>       .0990088
+             |
+    c.female#|
+      c.educ |  -.0055645   .0130618    -0.43   0.670    -.03122
+> 52                                                            
+>       .0200962
+             |
+       exper |   .0293366   .0049842     5.89   0.000      .0195
+> 45                                                            
+>       .0391283
+     expersq |  -.0005804   .0001075    -5.40   0.000    -.00079
+> 16                                                            
+>      -.0003691
+      tenure |   .0318967    .006864     4.65   0.000      .0184
+> 12                                                            
+>       .0453814
+     tenursq |    -.00059   .0002352    -2.51   0.012     -.0010
+> 52                                                            
+>       -.000128
+       _cons |    .388806   .1186871     3.28   0.001     .15563
+> 88                                                            
+>       .6219733
+----------------------------------------------------------------
+> --------------
+
+. 
+. esttab ex7_10 using "tab7_10.rtf", replace ///
+>     se star(* 0.10 ** 0.05 *** 0.01) ///
+>     stats(N r2 F, ///
+>           fmt(0 3 3) ///
+>           labels("Obs." "R²" "Estatística F"))
+(note: file tab7_10.rtf not found)
+(output written to tab7_10.rtf)
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.tmp"
+
+. test c.educ#c.female = 0
+
+ ( 1)  c.female#c.educ = 0
+
+       F(  1,   518) =    0.18
+            Prob > F =    0.6703
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.t
+> mp"
+
+. display _b[c.female#c.educ]/_se[c.female#c.educ]
+-.4260126
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.t
+> mp"
+
+. test female c.female#c.educ
+
+ ( 1)  female = 0
+ ( 2)  c.female#c.educ = 0
+
+       F(  2,   518) =   34.33
+            Prob > F =    0.0000
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.t
+> mp"
+
+. gen educc = educ - 12.5
+
+. 
+. reg lwage female educ educc#female exper expersq tenur
+> e tenursq
+educc:  factor variables may not contain noninteger valu
+> es
+r(452);
+
+end of do-file
+
+r(452);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.t
+> mp"
+
+. reg lwage female educ c.educc#c.female exper expersq t
+> enure tenursq
+
+      Source |       SS           df       MS      Numbe
+> r of obs   =       526
+-------------+----------------------------------   F(7, 
+> 518)       =     58.37
+       Model |  65.4081534         7  9.34402191   Prob 
+> > F        =    0.0000
+    Residual |  82.9216094       518  .160080327   R-squ
+> ared       =    0.4410
+-------------+----------------------------------   Adj R
+> -squared   =    0.4334
+       Total |  148.329763       525  .282532881   Root 
+> MSE        =     .4001
+
+--------------------------------------------------------
+> ----------------------
+       lwage |      Coef.   Std. Err.      t    P>|t|   
+>   [95% Con                                            
+>           f. Interval]
+-------------+------------------------------------------
+> ----------------------
+      female |   -.296345   .0358358    -8.27   0.000   
+>  -.3667465                                            
+>              -.2259436
+        educ |   .0823692   .0084699     9.72   0.000   
+>   .0657296                                            
+>               .0990088
+             |
+     c.educc#|
+    c.female |  -.0055645   .0130618    -0.43   0.670   
+>  -.0312252                                            
+>               .0200962
+             |
+       exper |   .0293366   .0049842     5.89   0.000   
+>    .019545                                            
+>               .0391283
+     expersq |  -.0005804   .0001075    -5.40   0.000   
+>  -.0007916                                            
+>              -.0003691
+      tenure |   .0318967    .006864     4.65   0.000   
+>    .018412                                            
+>               .0453814
+     tenursq |    -.00059   .0002352    -2.51   0.012   
+>   -.001052                                            
+>               -.000128
+       _cons |    .388806   .1186871     3.28   0.001   
+>   .1556388                                            
+>               .6219733
+--------------------------------------------------------
+> ----------------------
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.t
+> mp"
+
+. eststo ex7_10: reg lwage female educ c.female#c.educ e
+> xper expersq tenure tenursq
+
+      Source |       SS           df       MS      Numbe
+> r of obs   =       526
+-------------+----------------------------------   F(7, 
+> 518)       =     58.37
+       Model |  65.4081534         7  9.34402191   Prob 
+> > F        =    0.0000
+    Residual |  82.9216094       518  .160080327   R-squ
+> ared       =    0.4410
+-------------+----------------------------------   Adj R
+> -squared   =    0.4334
+       Total |  148.329763       525  .282532881   Root 
+> MSE        =     .4001
+
+--------------------------------------------------------
+> ----------------------
+       lwage |      Coef.   Std. Err.      t    P>|t|   
+>   [95% Con                                            
+>           f. Interval]
+-------------+------------------------------------------
+> ----------------------
+      female |  -.2267887   .1675395    -1.35   0.176   
+>   -.555929                                            
+>               .1023516
+        educ |   .0823692   .0084699     9.72   0.000   
+>   .0657296                                            
+>               .0990088
+             |
+    c.female#|
+      c.educ |  -.0055645   .0130618    -0.43   0.670   
+>  -.0312252                                            
+>               .0200962
+             |
+       exper |   .0293366   .0049842     5.89   0.000   
+>    .019545                                            
+>               .0391283
+     expersq |  -.0005804   .0001075    -5.40   0.000   
+>  -.0007916                                            
+>              -.0003691
+      tenure |   .0318967    .006864     4.65   0.000   
+>    .018412                                            
+>               .0453814
+     tenursq |    -.00059   .0002352    -2.51   0.012   
+>   -.001052                                            
+>               -.000128
+       _cons |    .388806   .1186871     3.28   0.001   
+>   .1556388                                            
+>               .6219733
+--------------------------------------------------------
+> ----------------------
+
+. 
+end of do-file
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.t
+> mp"
+
+. display _b[c.female#c.educ]/_se[c.female#c.educ]
+-.4260126
+
+. 
+. * teste conjunto
+. test female c.female#c.educ
+
+ ( 1)  female = 0
+ ( 2)  c.female#c.educ = 0
+
+       F(  2,   518) =   34.33
+            Prob > F =    0.0000
+
+. 
+. * Retorno da educação para as mulheres
+. display _b[educ] + _b[c.female#c.educ]
+.07680468
+
+. 
+. * Centralizar edcuação em 12.5 anos
+. gen educc = educ - 12.5
+variable educc already defined
+r(110);
+
+end of do-file
+
+r(110);
+
+. do "C:\Users\ianpm\AppData\Local\Temp\STD4ae0_000000.t
+> mp"
+
+. reg lwage female educ c.educc#c.female exper expersq t
+> enure tenursq
+
+      Source |       SS           df       MS      Numbe
+> r of obs   =       526
+-------------+----------------------------------   F(7, 
+> 518)       =     58.37
+       Model |  65.4081534         7  9.34402191   Prob 
+> > F        =    0.0000
+    Residual |  82.9216094       518  .160080327   R-squ
+> ared       =    0.4410
+-------------+----------------------------------   Adj R
+> -squared   =    0.4334
+       Total |  148.329763       525  .282532881   Root 
+> MSE        =     .4001
+
+--------------------------------------------------------
+> ----------------------
+       lwage |      Coef.   Std. Err.      t    P>|t|   
+>   [95% Con                                            
+>           f. Interval]
+-------------+------------------------------------------
+> ----------------------
+      female |   -.296345   .0358358    -8.27   0.000   
+>  -.3667465                                            
+>              -.2259436
+        educ |   .0823692   .0084699     9.72   0.000   
+>   .0657296                                            
+>               .0990088
+             |
+     c.educc#|
+    c.female |  -.0055645   .0130618    -0.43   0.670   
+>  -.0312252                                            
+>               .0200962
+             |
+       exper |   .0293366   .0049842     5.89   0.000   
+>    .019545                                            
+>               .0391283
+     expersq |  -.0005804   .0001075    -5.40   0.000   
+>  -.0007916                                            
+>              -.0003691
+      tenure |   .0318967    .006864     4.65   0.000   
+>    .018412                                            
+>               .0453814
+     tenursq |    -.00059   .0002352    -2.51   0.012   
+>   -.001052                                            
+>               -.000128
+       _cons |    .388806   .1186871     3.28   0.001   
+>   .1556388                                            
+>               .6219733
+--------------------------------------------------------
+> ----------------------
+
+. 
+end of do-file
+
+. save "C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\
+> Stata\ExemplosWooldridge\Cap7\wage17_1e_5.dta", replac
+> e
+file C:\Users\ianpm\Desktop\Ian\Faculdade\UFBA\PIBIC\Sta
+> ta\ExemplosWooldridge\Cap7\wage17_1e_5.dta saved
+
+. exit, clear
